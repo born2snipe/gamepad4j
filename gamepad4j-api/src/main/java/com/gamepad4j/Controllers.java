@@ -54,6 +54,15 @@ public class Controllers implements IControllerListener {
 			throw new IllegalStateException("Failed to initialize controller provider instance: " + e);
 		}
 	}
+
+	/**
+	 * Shuts down the controller handler (releases all resources that
+	 * might be held by any native wrapper / library). This should be
+	 * called when the game is terminated.
+	 */
+	public static void shutdown() {
+		controllerProvider.release();
+	}
 	
 	/**
 	 * Returns the Controllers instance.

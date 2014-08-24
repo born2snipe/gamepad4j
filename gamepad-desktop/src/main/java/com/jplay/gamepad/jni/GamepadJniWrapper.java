@@ -2,7 +2,7 @@
  * @Copyright: Marcel Schoen, Switzerland, 2013, All Rights Reserved.
  */
 
-package com.jplay.gdx.joypad;
+package com.jplay.gamepad.jni;
 
 /**
  * JNI wrapper for Gamepad library by Alex Diener.
@@ -13,7 +13,7 @@ package com.jplay.gdx.joypad;
 public class GamepadJniWrapper {
 
 	   static {
-		      System.loadLibrary("gamepad-jni-wrapper"); // hello.dll (Windows) or libhello.so (Unixes)
+		   System.loadLibrary("gamepad4j"); // hello.dll (Windows) or libhello.so (Unixes)
 	   }
 	   
 	   private native void natInit();
@@ -30,8 +30,13 @@ public class GamepadJniWrapper {
 			   System.out.println("----------- BEGIN -------------");
 			   GamepadJniWrapper wrapper = new GamepadJniWrapper();
 			   wrapper.natInit();
-			   int numberOfPads = wrapper.natGetNumberOfPads();
-			   System.out.println("Number of pads: " + numberOfPads);
+
+			   long start = System.currentTimeMillis();
+			   while(System.currentTimeMillis() - start < 20000) {
+				   int numberOfPads = wrapper.natGetNumberOfPads();
+				   System.out.println("Number of pads: " + numberOfPads);
+			   }
+			   
 			   wrapper.natRelease();
 			   System.out.println("----------- END -------------");
 		   } catch(Exception ex) {
