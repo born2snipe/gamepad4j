@@ -7,8 +7,6 @@ package com.gamepad4j.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import tv.ouya.console.api.OuyaController;
-
 import com.gamepad4j.ButtonID;
 import com.gamepad4j.ControllerListenerAdapter;
 import com.gamepad4j.IButton;
@@ -16,7 +14,6 @@ import com.gamepad4j.IController;
 import com.gamepad4j.IControllerListener;
 import com.gamepad4j.IControllerProvider;
 import com.gamepad4j.StickID;
-import com.jplay.gamepad.ouya.OuyaControllerWrapper;
 
 /**
  * Controller provider for desktop systems (Linux, MacOS X, Windows).
@@ -24,8 +21,7 @@ import com.jplay.gamepad.ouya.OuyaControllerWrapper;
  * @author Marcel Schoen
  * @version $Revision: $
  */
-public class DesktopControllerProvider implements IControllerProvider, IControllerListener {
-	private static final int MAX_CONTROLLERS = 8;
+public class DesktopControllerProvider implements IControllerProvider {
 	
 	/** Stores controller listeners. */
 	private ControllerListenerAdapter listeners = new ControllerListenerAdapter();
@@ -33,7 +29,7 @@ public class DesktopControllerProvider implements IControllerProvider, IControll
 	private GamepadJniWrapper jniWrapper = null;
 
 	/** Map of all connected controllers (deviceID / controller). */
-	private Map<Integer, IController> connected = new HashMap<Integer, IController>();
+	private Map<Integer, DesktopController> connected = new HashMap<Integer, DesktopController>();
 	
 	/** Stores the array of controllers. */
 	private IController[] controllerArray = null;
@@ -41,12 +37,15 @@ public class DesktopControllerProvider implements IControllerProvider, IControll
 	/** Stores the number of connected controllers. */
 	private int numberOfControllers = -1;
 	
+	/** Static holder for polling checks. */
+	private static DesktopController checkInstance = new DesktopController(-1);
+	
 	/* (non-Javadoc)
 	 * @see com.gamepad4j.IControllerProvider#initialize()
 	 */
 	@Override
 	public void initialize() {
-		jniWrapper = new GamepadJniWrapper(this);
+		jniWrapper = new GamepadJniWrapper();
 		jniWrapper.initialize();
 		System.out.flush();
 	}
@@ -66,6 +65,9 @@ public class DesktopControllerProvider implements IControllerProvider, IControll
 	public void checkControllers() {
 		boolean update = false;
 		jniWrapper.natDetectPads();
+		for(DesktopController controller : this.connected.values()) {
+			controller.setChecked(false);
+		}
 		this.numberOfControllers = jniWrapper.natGetNumberOfPads();
 		for(int ct = 0; ct < this.numberOfControllers; ct++) {
 			int deviceId = jniWrapper.natGetIdOfPad(ct);
@@ -73,12 +75,25 @@ public class DesktopControllerProvider implements IControllerProvider, IControll
 				if(connected.get(deviceId) == null) {
 					// Newly connected controller found
 					update = true;
-					System.out.println("Newly connected controller found.");
+					checkInstance.setIndex(ct);
+					jniWrapper.updateControllerStatus(checkInstance);
+					System.out.println("Newly connected controller found: " + checkInstance.getDeviceID() + " / " + checkInstance.getDescription());
+				} else {
+					connected.get(deviceId).setChecked(true);
 				}
 			}
 		}
 		if(update) {
+			// In this case, the map is complete re-created anyway
 			updateControllers();
+		} else {
+			// If nothing new is there, check that all old controllers were still around
+			for(DesktopController controller : this.connected.values()) {
+				if(!controller.isChecked()) {
+					System.out.println("Controller disconnected: " + controller.getDeviceID() + " / " + controller.getDescription());
+					this.connected.remove(controller.getDeviceID());
+				}
+			}
 		}
 	}
 
@@ -140,53 +155,5 @@ public class DesktopControllerProvider implements IControllerProvider, IControll
 	@Override
 	public void removeListener(IControllerListener listener) {
 		this.listeners.removeListener(listener);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.IControllerListener#connected(com.gamepad4j.IController)
-	 */
-	@Override
-	public void connected(IController controller) {
-		this.connected.put(controller.getDeviceID(), controller);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.IControllerListener#disConnected(com.gamepad4j.IController)
-	 */
-	@Override
-	public void disConnected(IController controller) {
-		this.connected.remove(controller.getDeviceID());
-	}
-
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.IControllerListener#buttonDown(com.gamepad4j.IController, com.gamepad4j.IButton, com.gamepad4j.ButtonID)
-	 */
-	@Override
-	public void buttonDown(IController controller, IButton button,
-			ButtonID buttonID) {
-		for(IControllerListener listener : this.listeners.getListeners()) {
-			listener.buttonDown(controller, button, buttonID);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.IControllerListener#buttonUp(com.gamepad4j.IController, com.gamepad4j.IButton, com.gamepad4j.ButtonID)
-	 */
-	@Override
-	public void buttonUp(IController controller, IButton button,
-			ButtonID buttonID) {
-		for(IControllerListener listener : this.listeners.getListeners()) {
-			listener.buttonUp(controller, button, buttonID);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.IControllerListener#moveStick(com.gamepad4j.IController, com.gamepad4j.StickID)
-	 */
-	@Override
-	public void moveStick(IController controller, StickID stick) {
-		for(IControllerListener listener : this.listeners.getListeners()) {
-			listener.moveStick(controller, stick);
-		}
 	}
 }

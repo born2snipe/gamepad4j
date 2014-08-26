@@ -26,6 +26,9 @@ public class DesktopController extends AbstractBaseController {
 	/** Stores the controller index value. */
 	private int index = -1;
 	
+	/** Flag for tracking check status. */
+	private boolean checked = false;
+	
 	IStick[] sticks = new IStick[0];
 	Map<StickID, IStick> stickMap = new HashMap<StickID, IStick>();
 
@@ -42,12 +45,35 @@ public class DesktopController extends AbstractBaseController {
 	}
 	
 	/**
+	 * @return the checked
+	 */
+	public boolean isChecked() {
+		return checked;
+	}
+
+	/**
+	 * @param checked the checked to set
+	 */
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
+	/**
 	 * Returns the index value of this desktop controller holder.
 	 * 
 	 * @return The index value.
 	 */
 	public int getIndex() {
 		return this.index;
+	}
+	
+	/**
+	 * Sets the index for this controller holder.
+	 * 
+	 * @param index The index value.
+	 */
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	/* (non-Javadoc)

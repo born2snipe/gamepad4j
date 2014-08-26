@@ -26,14 +26,15 @@ public class GamepadJniWrapper {
 	 * Reference to the controller event listener,
 	 * which is usually the DesktopControllerProvider instance. 
 	 */
-	private IControllerListener listener;
+//	private IControllerListener listener;
 	
 	/**
 	 * Prepares the native library for usage. This method
 	 * must be invoked before anything else is used.
 	 */
-	public GamepadJniWrapper(IControllerListener listener) {
-		this.listener = listener;
+//	public GamepadJniWrapper(IControllerListener listener) {
+	public GamepadJniWrapper() {
+//		this.listener = listener;
 		// Since there is no really portable way of detecting if a Java
 		// program is currently running on a 32 or 64 bit system, we try
 		// to load the 64 bit library first, and if that fails, fall back
