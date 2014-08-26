@@ -144,10 +144,6 @@ JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natDetect
 	return;
 }
 
-
-
-
-
 /*
  * Class:     com_gamepad4j_controller_GamepadJniWrapper
  * Method:    natGetControllerId

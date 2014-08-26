@@ -282,7 +282,6 @@ void Gamepad_detectDevices() {
 	static time_t lastInputStatTime;
 	
 	if (!inited) {
-		printf("Gamepad_linux.c: not inited, do nothing...\n");
 		return;
 	}
 	

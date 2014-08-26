@@ -9,9 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.gamepad4j.Controllers;
-import com.gamepad4j.IController;
-import com.gamepad4j.IControllerListener;
 import com.gamepad4j.util.PlatformUtil;
 
 /**
@@ -21,20 +18,12 @@ import com.gamepad4j.util.PlatformUtil;
  * @version $Revision: $
  */
 public class GamepadJniWrapper {
-
-	/** 
-	 * Reference to the controller event listener,
-	 * which is usually the DesktopControllerProvider instance. 
-	 */
-//	private IControllerListener listener;
 	
 	/**
 	 * Prepares the native library for usage. This method
 	 * must be invoked before anything else is used.
 	 */
-//	public GamepadJniWrapper(IControllerListener listener) {
 	public GamepadJniWrapper() {
-//		this.listener = listener;
 		// Since there is no really portable way of detecting if a Java
 		// program is currently running on a 32 or 64 bit system, we try
 		// to load the 64 bit library first, and if that fails, fall back
@@ -43,7 +32,7 @@ public class GamepadJniWrapper {
 		if (!loadLibrary(libraryFile)) {
 			libraryFile = unpackLibrary(false);
 			if (!loadLibrary(libraryFile)) {
-				System.err.println("*** FAILED TO LOAD EITHER 32 OR 64 BIT LIBRARY ***");
+				System.err.println("GamepadJniWrapper.<init>: *** FAILED TO LOAD EITHER 32 OR 64 BIT LIBRARY ***");
 			}
 		}
 	}
@@ -55,7 +44,7 @@ public class GamepadJniWrapper {
 	 * @param deviceID The device ID of the disconnected gamepad.
 	 */
 	public void callbackDisconnectDevice(int deviceID) {
-		System.out.println("*** Device disconnected / ID: " + deviceID + " ***");
+		System.out.println("GamepadJniWrapper.callbackDisconnectDevice(): *** Device disconnected / ID: " + deviceID + " ***");
 	}
 
 	/**
@@ -65,7 +54,7 @@ public class GamepadJniWrapper {
 	 * @param deviceID The device ID of the connected gamepad.
 	 */
 	public void callbackConnectDevice(int deviceID) {
-		System.out.println("*** Device connected / ID: " + deviceID + " ***");
+		System.out.println("GamepadJniWrapper.callbackConnectDevice(): *** Device connected / ID: " + deviceID + " ***");
 		/*
 		DesktopController newController = new DesktopController(0);
 		updateControllerStatus(newController);
@@ -86,9 +75,9 @@ public class GamepadJniWrapper {
 			File temp = File.createTempFile("nativelib", "");
 			temp.delete();
 			temp.mkdir();
-			System.out.println("Using temporary directory: " + temp.getAbsolutePath());
-			System.out.println("exists: " + temp.exists());
-			System.out.println("Is directory: " + temp.isDirectory());
+			System.out.println("GamepadJniWrapper.unpackLibrary(): Using temporary directory: " + temp.getAbsolutePath());
+			System.out.println("GamepadJniWrapper.unpackLibrary(): exists: " + temp.exists());
+			System.out.println("GamepadJniWrapper.unpackLibrary(): Is directory: " + temp.isDirectory());
 			if (temp.exists() && temp.isDirectory()) {
 				String subPath = "/32bit/";
 				if (use64bit) {
@@ -99,8 +88,8 @@ public class GamepadJniWrapper {
 						+ subPath;
 				String resourceName = path + library;
 				File libraryFile = new File(temp, library);
-				System.out.println("Extracting library resource: " + resourceName);
-				System.out.println("Extracting to local file: " + libraryFile.getCanonicalPath());
+				System.out.println("GamepadJniWrapper.unpackLibrary(): Extracting library resource: " + resourceName);
+				System.out.println("GamepadJniWrapper.unpackLibrary(): Extracting to local file: " + libraryFile.getCanonicalPath());
 				InputStream in = GamepadJniWrapper.class.getResourceAsStream(resourceName);
 				if(in != null) {
 					FileOutputStream out = new FileOutputStream(libraryFile);
@@ -112,15 +101,14 @@ public class GamepadJniWrapper {
 					out.flush();
 					out.close();
 					in.close();
-					System.setProperty("java.library.path", temp.getCanonicalPath());
-					System.out.println("Library successfully extracted.");
+					System.out.println("GamepadJniWrapper.unpackLibrary(): Library successfully extracted.");
 				} else {
 					throw new IOException("Resource not found in classpath: " + resourceName);
 				}
 				return libraryFile;
 			}
 		} catch (IOException e) {
-			System.err.println("*** FAILED TO EXTRACT LIBRARY ***");
+			System.err.println("GamepadJniWrapper.unpackLibrary(): *** FAILED TO EXTRACT LIBRARY ***");
 			// TODO Auto-generated catch block
 //			e.printStackTrace();
 		}
@@ -137,9 +125,9 @@ public class GamepadJniWrapper {
 			if(libraryFile == null) {
 				throw new IllegalArgumentException("There must be a native library.");
 			}
-			System.out.println("Trying to load library: " + libraryFile.getCanonicalPath());
+			System.out.println("GamepadJniWrapper.loadLibrary(): Trying to load library: " + libraryFile.getCanonicalPath());
 			System.load(libraryFile.getCanonicalPath());
-			System.out.println("Gamepad4j native library successfully loaded.");
+			System.out.println("GamepadJniWrapper.loadLibrary(): Gamepad4j native library successfully loaded.");
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return false;
@@ -163,20 +151,32 @@ public class GamepadJniWrapper {
 		controller.setProductID(idArray[2]);
 	}
 	
-
-	
+	/**
+	 * Returns the description text for a given pad.
+	 * 
+	 * @param index The index of the pad.
+	 * @return The description text (or null).
+	 */
 	public native String natGetControllerDescription(int index);
+	
+	/**
+	 * Updates the various IDs for a given pad in the given array.
+	 * 
+	 * @param index The index of the pad.
+	 * @param idArray The array which gets the updated values, where [0] is
+	 *                the device ID, [1] the vendor ID and [2] the product ID.
+	 */
 	public native void natGetControllerIDs(int index, int[] idArray);
 	
 	/**
 	 * Initializes the JNI wrapper.
 	 */
 	public void initialize() {
-		System.out.println("---- initialize JNI wrapper... ----");
+		System.out.println("GamepadJniWrapper.initialize(): initialize JNI wrapper...");
 		natInit();
-		System.out.println("---- detect pads... ----");
+		System.out.println("GamepadJniWrapper.initialize(): detect pads...");
 		natDetectPads();
-		System.out.println("---- done ----");
+		System.out.println("GamepadJniWrapper.initialize(): done.");
 	}
 	
 	/**
@@ -208,31 +208,4 @@ public class GamepadJniWrapper {
 	 * Forces detection of connected gamepads.
 	 */
 	public native void natDetectPads();
-
-	// private native IController natGetControllerAt(int index);
-	/*
-	public static void main(String[] args) {
-		try {
-			System.out.println("----------- BEGIN -------------");
-			GamepadJniWrapper wrapper = new GamepadJniWrapper();
-			wrapper.natInit();
-
-			int numberOfPads = wrapper.natGetNumberOfPads();
-			long start = System.currentTimeMillis();
-			while (System.currentTimeMillis() - start < 20000) {
-				int newNumberOfPads = wrapper.natGetNumberOfPads();
-				if(newNumberOfPads != numberOfPads) {
-					numberOfPads = newNumberOfPads;
-					System.out.println("Number of pads: " + numberOfPads);
-				}
-			}
-
-			wrapper.natRelease();
-			System.out.println("----------- END -------------");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.exit(-1);
-		}
-	}
-	*/
 }

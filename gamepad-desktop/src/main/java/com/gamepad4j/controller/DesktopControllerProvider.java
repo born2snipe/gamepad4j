@@ -7,13 +7,10 @@ package com.gamepad4j.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.gamepad4j.ButtonID;
 import com.gamepad4j.ControllerListenerAdapter;
-import com.gamepad4j.IButton;
 import com.gamepad4j.IController;
 import com.gamepad4j.IControllerListener;
 import com.gamepad4j.IControllerProvider;
-import com.gamepad4j.StickID;
 
 /**
  * Controller provider for desktop systems (Linux, MacOS X, Windows).
