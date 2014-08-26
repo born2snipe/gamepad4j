@@ -14,9 +14,9 @@ package com.gamepad4j;
 public interface IStick {
 
 	/**
-	 * Returns the ID of this stick.
+	 * Returns the deviceID of this stick.
 	 * 
-	 * @return The stick ID.
+	 * @return The stick deviceID.
 	 */
 	StickID getID();
 

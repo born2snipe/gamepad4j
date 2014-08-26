@@ -2,7 +2,7 @@
  * @Copyright: Marcel Schoen, Switzerland, 2013, All Rights Reserved.
  */
 
-package com.jplay.gdx.controller;
+package com.jplay.gamepad.ouya;
 
 import tv.ouya.console.api.OuyaController;
 
@@ -26,7 +26,7 @@ public class OuyaControllerButton extends AbstractBaseButton {
 	/**
 	 * Creates a new OUYA controller button wrapper.
 	 * 
-	 * @param id The ID of the button.
+	 * @param id The deviceID of the button.
 	 * @param isAnalog True if it is an analog button.
 	 * @param label The english default text label for this button.
 	 * @param labelKey The message resource key for the text label (may be null,

@@ -14,9 +14,9 @@ package com.gamepad4j;
 public interface IAxis {
 
 	/**
-	 * Returns the ID of this axis.
+	 * Returns the deviceID of this axis.
 	 * 
-	 * @return The axis ID (type).
+	 * @return The axis deviceID (type).
 	 */
 	AxisID getID();
 	

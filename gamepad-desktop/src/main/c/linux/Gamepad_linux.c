@@ -261,7 +261,6 @@ static void * deviceThread(void * context) {
 
 void Gamepad_detectDevices() {
 	struct input_id id;
-	printf("Gamepad_linux.c: detect devices...\n");
 	DIR * dev_input;
 	struct dirent * entity;
 	unsigned int charsConsumed;

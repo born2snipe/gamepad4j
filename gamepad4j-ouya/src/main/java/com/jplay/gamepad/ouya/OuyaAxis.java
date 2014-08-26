@@ -2,7 +2,7 @@
  * @Copyright: Marcel Schoen, Switzerland, 2013, All Rights Reserved.
  */
 
-package com.jplay.gdx.controller;
+package com.jplay.gamepad.ouya;
 
 import tv.ouya.console.api.OuyaController;
 
@@ -19,7 +19,7 @@ import com.gamepad4j.StickID;
  */
 public class OuyaAxis implements IAxis {
 
-	/** Stores the ID of the axis. */
+	/** Stores the deviceID of the axis. */
 	private AxisID id = null;
 
 	/** Reference to the stick which this axis belongs to. */
@@ -28,13 +28,13 @@ public class OuyaAxis implements IAxis {
 	/** Reference to the OUYA controller. */
 	private OuyaController controller = null;
 	
-	/** Stores the OUYA axis ID. */
+	/** Stores the OUYA axis deviceID. */
 	private int ouyaAxisId = -1;
 	
 	/**
 	 * Creates a wrapper for an analog stick axis.
 	 * 
-	 * @param id The ID of the axis.
+	 * @param id The deviceID of the axis.
 	 * @param stick The stick to which the axis belongs.
 	 * @param controller The wrapped controller.
 	 */

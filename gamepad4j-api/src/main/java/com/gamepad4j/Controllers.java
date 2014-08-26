@@ -86,7 +86,7 @@ public class Controllers implements IControllerListener {
 		// First make sure it's not already in the list
 		boolean addIt = true;
 		for(IController oldController : this.controllers) {
-			if(oldController.getID().equals(controller.getID())) {
+			if(oldController.getDeviceID() == controller.getDeviceID()) {
 				addIt = false;
 			}
 		}
@@ -110,7 +110,7 @@ public class Controllers implements IControllerListener {
 			IController[] newControllers = new IController[this.controllers.length - 1];
 			int ct = 0;
 			for(IController oldController : this.controllers) {
-				if(!oldController.getID().equals(controller.getID())) {
+				if(oldController.getDeviceID() != controller.getDeviceID()) {
 					newControllers[ct] = oldController;
 				}
 			}

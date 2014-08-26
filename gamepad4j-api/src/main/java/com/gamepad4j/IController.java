@@ -13,11 +13,35 @@ package com.gamepad4j;
 public interface IController {
 
 	/**
-	 * Returns the ID of the joypad controller.
+	 * Returns the deviceID of the joypad controller.
+	 * This is usually the USB device deviceID.
 	 * 
-	 * @return The controller ID string.
+	 * @return The controller device deviceID value, or -1, if it's not available.
 	 */
-	String getID();
+	int getDeviceID();
+
+	/**
+	 * Returns the vendor deviceID of the joypad controller.
+	 * This is usually the USB vendor deviceID.
+	 * 
+	 * @return The controller vendor deviceID value, or -1, if it's not available.
+	 */
+	int getVendorID();
+
+	/**
+	 * Returns the product deviceID of the joypad controller.
+	 * This is usually the USB product deviceID.
+	 * 
+	 * @return The controller product deviceID value, or -1, if it's not available.
+	 */
+	int getProductID();
+	
+	/**
+	 * A descriptive text (if available), like "Xbox 360 Controller".
+	 * 
+	 * @return The description text (or empty).
+	 */
+	String getDescription();
 
 	/**
 	 * Returns all the sticks of this controller. This also includes
@@ -41,7 +65,7 @@ public interface IController {
 	 * Returns the value of the given axis of the given stick (which
 	 * may also be a touchpad, accelerometer etc.).
 	 * 
-	 * @param stick The ID of the stick to check.
+	 * @param stick The deviceID of the stick to check.
 	 * @param axis The axis to read.
 	 * @return The value of the axis (between -1.0 and 1.0).
 	 */
@@ -84,7 +108,7 @@ public interface IController {
 	/**
 	 * Returns a reference to a specific button on this controller.
 	 * 
-	 * @param buttonID The ID of the given button.
+	 * @param buttonID The deviceID of the given button.
 	 * @return The reference of that button (null if it does not exist).
 	 */
 	IButton getButton(ButtonID buttonID);
@@ -93,7 +117,7 @@ public interface IController {
 	 * Convenience method for checking if a given button (digital or analog)
 	 * is currently pressed.
 	 * 
-	 * @param buttonID The ID of the button.
+	 * @param buttonID The deviceID of the button.
 	 * @return True if it's pressed.
 	 */
 	boolean isButtonPressed(ButtonID buttonID);
@@ -105,7 +129,7 @@ public interface IController {
 	 * until it is released once. This can be used when the user should press
 	 * the button repeatedly instead of just keeping it pressed.
 	 * 
-	 * @param buttonID The ID of the button.
+	 * @param buttonID The deviceID of the button.
 	 * @return True if it's pressed.
 	 */
 	boolean isButtonPressedOnce(ButtonID buttonID);

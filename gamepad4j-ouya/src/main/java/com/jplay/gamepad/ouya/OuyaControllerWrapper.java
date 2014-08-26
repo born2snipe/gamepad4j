@@ -2,7 +2,7 @@
  * @Copyright: Marcel Schoen, Switzerland, 2013, All Rights Reserved.
  */
 
-package com.jplay.gdx.controller;
+package com.jplay.gamepad.ouya;
 
 import tv.ouya.console.api.OuyaController;
 

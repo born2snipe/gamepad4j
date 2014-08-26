@@ -20,8 +20,17 @@ import com.gamepad4j.IController;
  */
 public abstract class AbstractBaseController implements IController {
 
-	/** Stores the ID of this controller. */
-	protected String ID = null;
+	/** Stores the deviceID of this controller. */
+	protected int deviceID = -1;
+
+	/** Stores the vendorID of this controller. */
+	protected int vendorID = -1;
+
+	/** Stores the productID of this controller. */
+	protected int productID = -1;
+
+	/** Stores the description of this controller. */
+	protected String description = "";
 
 	/** Stores the last d-pad direction. */
 	protected DpadDirection lastDirection = null;
@@ -38,12 +47,24 @@ public abstract class AbstractBaseController implements IController {
 	/**
 	 * Creates a controller wrapper.
 	 * 
-	 * @param id The ID of the controller.
+	 * @param id The deviceID of the controller.
 	 */
-	protected AbstractBaseController(String id) {
-		this.ID = id;
-		if(this.ID == null) {
-			this.ID = "unknown";
+	protected AbstractBaseController(int deviceID) {
+		this(deviceID, "");
+	}
+	
+	/**
+	 * Creates a controller wrapper.
+	 * 
+	 * @param id The deviceID of the controller.
+	 */
+	protected AbstractBaseController(int deviceID, String description) {
+		this.deviceID = deviceID;
+		if(this.deviceID < 0) {
+			throw new IllegalArgumentException("Device ID must be positive integer value.");
+		}
+		if(description != null) {
+			this.description = description;
 		}
 	}
 	
@@ -56,13 +77,69 @@ public abstract class AbstractBaseController implements IController {
 		this.buttonMap.put(button.getID(), button);
 		this.buttonCodeMap.put(button.getCode(), button);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.gamepad4j.util.IController#getDescription()
+	 */
+	@Override
+	public String getDescription() {
+		return this.description;
+	}
+	
+	/**
+	 * Sets the description for this controller.
+	 * 
+	 * @param description The description text.
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	
 	/* (non-Javadoc)
 	 * @see com.gamepad4j.util.IController#getID()
 	 */
 	@Override
-	public String getID() {
-		return this.ID;
+	public int getDeviceID() {
+		return this.deviceID;
+	}
+
+	/**
+	 * @param deviceID the deviceID to set
+	 */
+	public void setDeviceID(int deviceID) {
+		this.deviceID = deviceID;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.gamepad4j.IController#getVendorID()
+	 */
+	@Override
+	public int getVendorID() {
+		return vendorID;
+	}
+
+	/**
+	 * @param vendorID the vendorID to set
+	 */
+	public void setVendorID(int vendorID) {
+		this.vendorID = vendorID;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.gamepad4j.IController#getProductID()
+	 */
+	@Override
+	public int getProductID() {
+		return productID;
+	}
+
+	/**
+	 * @param productID the productID to set
+	 */
+	public void setProductID(int productID) {
+		this.productID = productID;
 	}
 
 	/* (non-Javadoc)

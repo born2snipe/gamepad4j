@@ -18,7 +18,7 @@ import com.gamepad4j.StickPosition;
  */
 public abstract class AbstractBaseStick implements IStick {
 
-	/** Stores the ID of this stick. */
+	/** Stores the deviceID of this stick. */
 	protected StickID ID = StickID.UNKNOWN;
 
 	/** The stick position data holder. */
@@ -33,7 +33,7 @@ public abstract class AbstractBaseStick implements IStick {
 	/**
 	 * Creates a stick wrapper.
 	 * 
-	 * @param ID The ID of this stick.
+	 * @param deviceID The deviceID of this stick.
 	 */
 	protected AbstractBaseStick(StickID ID) {
 		this.ID = ID;

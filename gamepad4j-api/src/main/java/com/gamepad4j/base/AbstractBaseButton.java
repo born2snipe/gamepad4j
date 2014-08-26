@@ -15,7 +15,7 @@ import com.gamepad4j.IButton;
  */
 public abstract class AbstractBaseButton implements IButton {
 
-	/** Stores the ID of this button. */
+	/** Stores the deviceID of this button. */
 	protected ButtonID ID = ButtonID.UNKNOWN;
 	
 	/** Stores the label of this button. */
@@ -36,7 +36,7 @@ public abstract class AbstractBaseButton implements IButton {
 	/**
 	 * Creates a button wrapper.
 	 * 
-	 * @param ID The ID of this button.
+	 * @param deviceID The deviceID of this button.
 	 * @param isAnalog Set to true if this is an analog button.
 	 * @param label The text label (may be null).
 	 * @param labelKey The text label key (may be null).

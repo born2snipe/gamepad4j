@@ -45,7 +45,7 @@ public enum ButtonID {
 	private String defaultLabel = "";
 	
 	/**
-	 * Creates a button ID holder.
+	 * Creates a button deviceID holder.
 	 * 
 	 * @param label The default text label for this button.
 	 */

@@ -2,7 +2,7 @@
  * @Copyright: Marcel Schoen, Switzerland, 2013, All Rights Reserved.
  */
 
-package com.jplay.gdx.controller;
+package com.jplay.gamepad.ouya;
 
 import tv.ouya.console.api.OuyaController;
 
@@ -29,7 +29,7 @@ public class OuyaControllerStick extends AbstractBaseStick {
 	/**
 	 * Creates an OUYA analog stick wrapper.
 	 * 
-	 * @param id The ID of the stick.
+	 * @param id The deviceID of the stick.
 	 * @param controller The wrapped controller.
 	 */
 	public OuyaControllerStick(StickID id, OuyaController controller) {

@@ -8,17 +8,39 @@ package com.gamepad4j.util;
 import java.lang.reflect.Field;
 
 /**
- * Misc utility stuff.
+ * OS-/Platform-related utility functionality.
  *
  * @author Marcel Schoen
  */
 public class PlatformUtil {
-	
+
 	/** Runtime OS detection. */
 	private static String OS = System.getProperty("os.name").toLowerCase();
 
 	/** Holds value of OUYA runtime detection. */
 	private static Boolean isOuya = null;
+	
+	/**
+	 * Returns the type of platform the JVM is
+	 * currently running on.
+	 * 
+	 * @return The platform type.
+	 */
+	public static Platform getPlatform() {
+		if(isOuya()) {
+			return Platform.ouya;
+		}
+		if(isMac()) {
+			return Platform.macos;
+		}
+		if(isWindows()) {
+			return Platform.windows;
+		}
+		if(isLinux()) {
+			return Platform.linux;
+		}
+		return Platform.unknown;
+	}
 	
 	/**
 	 * Check if game runs on OUYA.
@@ -66,7 +88,7 @@ public class PlatformUtil {
 	 * 
 	 * @return True if it runs on a Unix system.
 	 */
-	public static boolean isUnix() {
+	public static boolean isLinux() {
 		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
 	}
 }

@@ -34,6 +34,15 @@ public interface IControllerProvider {
 	void checkControllers();
 	
 	/**
+	 * In case the implementation does not support callbacks,
+	 * this method must be able to provide an array with all
+	 * currently connected controllers.
+	 * 
+	 * @return The currently connected controllers.
+	 */
+	IController[] getControllers();
+	
+	/**
 	 * Must inform the caller if the implementation supports
 	 * callbacks for events such as controller connects / disconnects etc.
 	 * 

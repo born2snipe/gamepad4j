@@ -14,10 +14,10 @@ package com.gamepad4j;
 public interface IButton {
 
 	/**
-	 * Returns the ID of this button. May be "UNKNOWN" if
+	 * Returns the deviceID of this button. May be "UNKNOWN" if
 	 * it's not a known, mapped key (but never null).
 	 * 
-	 * @return The ID of the button. If it is "ButtonID.UNKNOWN", the method
+	 * @return The deviceID of the button. If it is "ButtonID.UNKNOWN", the method
 	 *         "getCode()" can be used to query the actual numerical value.
 	 */
 	ButtonID getID();

@@ -32,7 +32,7 @@ public interface IControllerListener {
 	 * @param controller The controller on which a button was pressed.
 	 * @param button The button that was pressed. If an analog pressure value
 	 *               is required, it can be queried from this object.
-	 * @param buttonID The ID of the button that was pressed.
+	 * @param buttonID The deviceID of the button that was pressed.
 	 */
 	void buttonDown(IController controller, IButton button, ButtonID buttonID);
 
@@ -41,7 +41,7 @@ public interface IControllerListener {
 	 * 
 	 * @param controller The controller on which a button was released.
 	 * @param button The button that was released.
-	 * @param buttonID The ID of the button that was released.
+	 * @param buttonID The deviceID of the button that was released.
 	 */
 	void buttonUp(IController controller, IButton button, ButtonID buttonID);
 	

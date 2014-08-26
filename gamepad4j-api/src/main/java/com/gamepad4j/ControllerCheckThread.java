@@ -29,6 +29,7 @@ public class ControllerCheckThread implements Runnable {
 	 */
 	@Override
 	public void run() {
+		System.out.println("Starting game controller check thread...");
 		while(running) {
 			Controllers.checkControllers();
 			try {
