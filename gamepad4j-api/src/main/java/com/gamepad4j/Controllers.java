@@ -46,6 +46,8 @@ public class Controllers implements IControllerListener {
 			System.out.println("Controller provider ready: " + controllerProvider.getClass().getName());
 			if(!controllerProvider.supportsCallbacks()) {
 				Thread checkThread = new Thread(new ControllerCheckThread());
+				checkThread.setPriority(Thread.MIN_PRIORITY);
+				checkThread.setDaemon(true);
 				checkThread.start();
 				System.out.println("Controller check thread started.");
 			}

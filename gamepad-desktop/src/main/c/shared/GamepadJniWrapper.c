@@ -10,62 +10,6 @@
 #include <Gamepad.h>
 #include <com_gamepad4j_controller_GamepadJniWrapper.h>
 
-static bool verbose = true;
-
-
-static jmethodID midStr;
-static jobject callbackObj;
-static JavaVM *gJavaVM;
-
-void onButtonDown(struct Gamepad_device * device, unsigned int buttonID,
-		double timestamp) {
-	if (verbose) {
-		printf("Button %u down on device %u at %f\n", buttonID,
-				device->deviceID, timestamp);
-	}
-}
-
-void onButtonUp(struct Gamepad_device * device, unsigned int buttonID,
-		double timestamp) {
-	if (verbose) {
-		printf("Button %u up on device %u at %f\n", buttonID, device->deviceID,
-				timestamp);
-	}
-}
-
-void onAxisMoved(struct Gamepad_device * device, unsigned int axisID,
-		float value, double timestamp) {
-	if (verbose) {
-		printf("Axis %u moved to %f on device %u at %f\n", axisID, value,
-				device->deviceID, timestamp);
-	}
-}
-
-void onDeviceAttached(struct Gamepad_device * device) {
-	if (verbose) {
-		printf("Device ID %u attached (vendor = 0x%X; product = 0x%X)\n",
-				device->deviceID, device->vendorID, device->productID);
-	}
-/*
-	JNIEnv *env;
-printf("---------> 1\n");
-	(*gJavaVM)->GetEnv(gJavaVM, (void**)&env, JNI_VERSION_1_6);
-	printf("---------> 2\n");
-	(*gJavaVM)->AttachCurrentThread(gJavaVM, (void **)&env, NULL);
-	printf("---------> 3\n");
-	(*env)->CallVoidMethod(env, callbackObj, midStr, device->deviceID);
-	printf("---------> 4\n");
-	(*gJavaVM)->DetachCurrentThread(gJavaVM);
-	printf("---------> 5\n");
-	*/
-}
-
-void onDeviceRemoved(struct Gamepad_device * device) {
-	if (verbose) {
-		printf("Device ID %u removed\n", device->deviceID);
-	}
-}
-
 /*
  * Class:     com_gamepad4j_controller_GamepadJniWrapper
  * Method:    natInit
@@ -73,28 +17,8 @@ void onDeviceRemoved(struct Gamepad_device * device) {
  */
 JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natInit
 (JNIEnv *env, jobject obj) {
-	printf("Init!\n");
-
-	printf("Get VM..\n");
-	jint rs = (*env)->GetJavaVM(env, &gJavaVM);
-	if(rs == JNI_OK) {
-		printf("**** VM OK ****\n");
-	}
-
-	// Register callback methods
-	printf("Prepare callbacks!\n");
-	jclass thisClass = (*env)->GetObjectClass(env, obj);
-	callbackObj = obj;
-	printf("Get method reference..\n");
-	midStr = (*env)->GetMethodID(env, thisClass, "callbackConnectDevice", "(I)V");
-	Gamepad_deviceAttachFunc(onDeviceAttached);
-	Gamepad_deviceRemoveFunc(onDeviceRemoved);
-	Gamepad_buttonDownFunc(onButtonDown);
-	Gamepad_buttonUpFunc(onButtonUp);
-	Gamepad_axisMoveFunc(onAxisMoved);
+	printf("Initialize native Gamepad API.\n");
 	Gamepad_init();
-
-	printf("Init completed.\n");
 }
 
 /*
@@ -104,9 +28,8 @@ JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natInit
  */
 JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natRelease
 (JNIEnv *env, jobject obj) {
-	printf("Release!\n");
+	printf("Shutdown native Gamepad API.\n");
 	Gamepad_shutdown();
-	return;
 }
 
 /*
@@ -117,6 +40,48 @@ JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natReleas
 JNIEXPORT jint JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetNumberOfPads(
 		JNIEnv *env, jobject obj) {
 	return Gamepad_numDevices();
+}
+
+/*
+ * Class:     com_gamepad4j_controller_GamepadJniWrapper
+ * Method:    natGetDeviceID
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetDeviceID(
+		JNIEnv *env, jobject obj, jint index) {
+	struct Gamepad_device * device = Gamepad_deviceAtIndex(index);
+	if(device == NULL) {
+		return -1;
+	}
+	return device->deviceID;
+}
+
+/*
+ * Class:     com_gamepad4j_controller_GamepadJniWrapper
+ * Method:    natGetNumberOfButtons
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetNumberOfButtons(
+		JNIEnv *env, jobject obj, jint index) {
+	struct Gamepad_device * device = Gamepad_deviceAtIndex(index);
+	if(device == NULL) {
+		return -1;
+	}
+	return device->numButtons;
+}
+
+/*
+ * Class:     com_gamepad4j_controller_GamepadJniWrapper
+ * Method:    natGetNumberOfAxes
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetNumberOfAxes(
+		JNIEnv *env, jobject obj, jint index) {
+	struct Gamepad_device * device = Gamepad_deviceAtIndex(index);
+	if(device == NULL) {
+		return -1;
+	}
+	return device->numAxes;
 }
 
 /*
@@ -147,13 +112,16 @@ JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natDetect
 /*
  * Class:     com_gamepad4j_controller_GamepadJniWrapper
  * Method:    natGetControllerId
- * Signature: ()I
+ * Signature: (I)S
  */
 JNIEXPORT jstring JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetControllerDescription(
 		JNIEnv *env, jobject obj, jint gamepadIndex)
 {
 	unsigned int index = gamepadIndex;
 	struct Gamepad_device * device = Gamepad_deviceAtIndex(index);
+	if(device == NULL) {
+		return NULL;
+	}
     jstring result = (*env)->NewStringUTF(env, device->description); // C style string to Java String
     return result;
 }
@@ -161,19 +129,73 @@ JNIEXPORT jstring JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGet
 /*
  * Class:     com_gamepad4j_controller_GamepadJniWrapper
  * Method:    natGetControllerId
- * Signature: ()I
+ * Signature: (I[])V
  */
 JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetControllerIDs(
 		JNIEnv *env, jobject obj, jint gamepadIndex, jintArray idArray)
 {
+	struct Gamepad_device * device = Gamepad_deviceAtIndex(gamepadIndex);
+	if(device == NULL) {
+		return;
+	}
 	jint *ids = (*env)->GetIntArrayElements(env, idArray, NULL);
 
-	struct Gamepad_device * device = Gamepad_deviceAtIndex(gamepadIndex);
 	ids[0] = device->deviceID;
 	ids[1] = device->vendorID;
 	ids[2] = device->productID;
 
 	(*env)->ReleaseIntArrayElements(env, idArray, ids, 0);
+}
+
+/*
+ * Class:     com_gamepad4j_controller_GamepadJniWrapper
+ * Method:    natGetControllerButtonStates
+ * Signature: (B[])V
+ */
+JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetControllerButtonStates(
+		JNIEnv *env, jobject obj, jint gamepadIndex, jbooleanArray buttonArray)
+{
+	unsigned int buttonIndex;
+
+	struct Gamepad_device * device = Gamepad_deviceAtIndex(gamepadIndex);
+	if(device == NULL) {
+		return;
+	}
+
+	jboolean *states = (*env)->GetBooleanArrayElements(env, buttonArray, NULL);
+
+	for (buttonIndex = 0; buttonIndex <= device->numButtons; buttonIndex++) {
+		states[buttonIndex] = JNI_FALSE;
+		if (device->buttonStates[buttonIndex]) {
+			states[buttonIndex] = JNI_TRUE;
+		}
+	}
+
+	(*env)->ReleaseBooleanArrayElements(env, buttonArray, states, 0);
+}
+
+/*
+ * Class:     com_gamepad4j_controller_GamepadJniWrapper
+ * Method:    natGetControllerAxesStates
+ * Signature: (F[])V
+ */
+JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetControllerAxesStates(
+		JNIEnv *env, jobject obj, jint gamepadIndex, jfloatArray axesArray)
+{
+	unsigned int axisIndex;
+
+	struct Gamepad_device * device = Gamepad_deviceAtIndex(gamepadIndex);
+	if(device == NULL) {
+		return;
+	}
+
+	jfloat *states = (*env)->GetFloatArrayElements(env, axesArray, NULL);
+
+	for (axisIndex = 0; axisIndex <= device->numAxes; axisIndex++) {
+		states[axisIndex] = device->axisStates[axisIndex];
+	}
+
+	(*env)->ReleaseFloatArrayElements(env, axesArray, states, 0);
 }
 
 

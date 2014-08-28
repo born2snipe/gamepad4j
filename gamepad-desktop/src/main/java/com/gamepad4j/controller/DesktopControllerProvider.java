@@ -23,19 +23,19 @@ public class DesktopControllerProvider implements IControllerProvider {
 	/** Stores controller listeners. */
 	private ControllerListenerAdapter listeners = new ControllerListenerAdapter();
 
-	private GamepadJniWrapper jniWrapper = null;
+	private static GamepadJniWrapper jniWrapper = null;
 
 	/** Map of all connected controllers (deviceID / controller). */
-	private Map<Integer, DesktopController> connected = new HashMap<Integer, DesktopController>();
+	private static Map<Integer, DesktopController> connected = new HashMap<Integer, DesktopController>();
+	
+	/** Stores the controllers instance pool. */
+	private static DesktopController[] controllerPool = new DesktopController[16];
 	
 	/** Stores the array of controllers. */
-	private IController[] controllerArray = null;
+	private static IController[] controllerArray = null;
 	
 	/** Stores the number of connected controllers. */
-	private int numberOfControllers = -1;
-	
-	/** Static holder for polling checks. */
-	private static DesktopController checkInstance = new DesktopController(-1);
+	private static int numberOfControllers = -1;
 	
 	/* (non-Javadoc)
 	 * @see com.gamepad4j.IControllerProvider#initialize()
@@ -44,6 +44,9 @@ public class DesktopControllerProvider implements IControllerProvider {
 	public void initialize() {
 		jniWrapper = new GamepadJniWrapper();
 		jniWrapper.initialize();
+		for(int i = 0; i < controllerPool.length; i++) {
+			controllerPool[i] = new DesktopController(-1);
+		}
 		System.out.flush();
 	}
 
@@ -55,70 +58,79 @@ public class DesktopControllerProvider implements IControllerProvider {
 		jniWrapper.natRelease();
 	}
 
+	/**
+	 * Returns a controller holder instance from the pool and
+	 * sets its index to the given value.
+	 * 
+	 * @param index The index to set for the controller instance.
+	 * @return The controller holder (or null if there was none free).
+	 */
+	private synchronized static DesktopController getInstanceFromPool(int index) {
+		for(int i = 0; i < controllerPool.length; i++) {
+			if(controllerPool[i] != null) {
+				DesktopController reference = controllerPool[i]; 
+				reference.setIndex(index);
+				connected.put(index, reference);
+				controllerPool[i] = null;
+				return reference;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the given controller instance to the pool.
+	 * 
+	 * @param controller The controller instance to return (must not be null).
+	 */
+	private synchronized static void returnInstanceToPool(DesktopController controller) {
+		for(int i = 0; i < controllerPool.length; i++) {
+			if(controllerPool[i] == null) {
+				controllerPool[i] = controller;
+				connected.remove(controller.getIndex());
+			}
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.gamepad4j.IControllerProvider#checkControllers()
 	 */
 	@Override
 	public void checkControllers() {
-		boolean update = false;
 		jniWrapper.natDetectPads();
 		for(DesktopController controller : this.connected.values()) {
 			controller.setChecked(false);
 		}
+		
+		// 1st check which controllers are (still) connected
 		this.numberOfControllers = jniWrapper.natGetNumberOfPads();
 		for(int ct = 0; ct < this.numberOfControllers; ct++) {
-			int deviceId = jniWrapper.natGetIdOfPad(ct);
-			if(deviceId != -1) {
-				if(connected.get(deviceId) == null) {
-					// Newly connected controller found
-					update = true;
-					checkInstance.setIndex(ct);
-					jniWrapper.updateControllerStatus(checkInstance);
-					System.out.println("Newly connected controller found: " + checkInstance.getDeviceID() + " / " + checkInstance.getDescription());
+			int connectedId = jniWrapper.natGetDeviceID(ct);
+			if(connectedId != -1) {
+				DesktopController controller = this.connected.get(connectedId);
+				if(controller != null) {
+					controller.setChecked(true);
 				} else {
-					connected.get(deviceId).setChecked(true);
+					DesktopController newController = getInstanceFromPool(ct);
+					newController.setChecked(true);
+					jniWrapper.updateControllerInfo(newController);
+					System.out.println("Newly connected controller found: " + newController.getDeviceID() + " / " + newController.getDescription());
+					this.connected.put(ct, newController);
 				}
 			}
 		}
-		if(update) {
-			// In this case, the map is complete re-created anyway
-			updateControllers();
-		} else {
-			// If nothing new is there, check that all old controllers were still around
-			for(DesktopController controller : this.connected.values()) {
-				if(!controller.isChecked()) {
-					System.out.println("Controller disconnected: " + controller.getDeviceID() + " / " + controller.getDescription());
-					this.connected.remove(controller.getDeviceID());
-				}
-			}
-		}
-	}
 
-	/**
-	 * Updates the array of controllers. Invoke only when
-	 * an update is really necessary (because this method creates new
-	 * wrapper objects and changes the map of controllers).
-	 */
-	private void updateControllers() {
-		this.connected.clear();
-		this.numberOfControllers = jniWrapper.natGetNumberOfPads();
-		for(int ct = 0; ct < this.numberOfControllers; ct++) {
-			int deviceId = jniWrapper.natGetIdOfPad(ct);
-			if(deviceId != -1) {
-				DesktopController desktopController = new DesktopController(ct);
-				jniWrapper.updateControllerStatus(desktopController);
-				this.connected.put(desktopController.getDeviceID(), desktopController);
-				for(IControllerListener listener : this.listeners.getListeners()) {
-					listener.connected(desktopController);
-				}
+		// 2nd remove the controllers not found in the first loop
+		for(DesktopController controller : this.connected.values()) {
+			if(!controller.isChecked()) {
+				System.out.println("Controller disconnected: " + controller.getDeviceID() + " / " + controller.getDescription());
+				this.connected.remove(controller.getDeviceID());
 			}
 		}
-		// Re-adjust stored values to number of actually found valid controllers
-		this.numberOfControllers = this.connected.size();
-		this.controllerArray = new IController[this.numberOfControllers];
-		int ct = 0;
-		for(IController controller : this.connected.values()) {
-			this.controllerArray[ct++] = controller;
+
+		// 3rd update the state of all remaining controllers
+		for(DesktopController controller : this.connected.values()) {
+			jniWrapper.updateControllerStatus(controller);
 		}
 	}
 

@@ -18,7 +18,17 @@ import com.gamepad4j.util.PlatformUtil;
  * @version $Revision: $
  */
 public class GamepadJniWrapper {
-	
+
+	/** 
+	 * Array which temporarily holds controller ID information.
+	 */
+	private static int[] idArray = new int[3];
+
+	/** 
+	 * Array which temporarily holds controller button state information.
+	 */
+	private static boolean[] buttonArray = new boolean[32];
+
 	/**
 	 * Prepares the native library for usage. This method
 	 * must be invoked before anything else is used.
@@ -139,34 +149,28 @@ public class GamepadJniWrapper {
 	 * Updates the status information on the given controller holder object.
 	 * 
 	 * @param controller
-	 * @return
 	 */
 	public void updateControllerStatus(DesktopController controller) {
+		natGetControllerButtonStates(controller.getIndex(), buttonArray);
+		int numberOfButtons = natGetNumberOfButtons(controller.getIndex());
+		for(int i = 0; i < numberOfButtons; i++) {
+			
+		}
+	}
+	
+	/**
+	 * Updates the ID information on the given controller holder object.
+	 * 
+	 * @param controller
+	 */
+	public void updateControllerInfo(DesktopController controller) {
 		String description = natGetControllerDescription(controller.getIndex());
 		controller.setDescription(description);
-		int[] idArray = new int[3];
 		natGetControllerIDs(controller.getIndex(), idArray);
 		controller.setDeviceID(idArray[0]);
 		controller.setVendorID(idArray[1]);
 		controller.setProductID(idArray[2]);
 	}
-	
-	/**
-	 * Returns the description text for a given pad.
-	 * 
-	 * @param index The index of the pad.
-	 * @return The description text (or null).
-	 */
-	public native String natGetControllerDescription(int index);
-	
-	/**
-	 * Updates the various IDs for a given pad in the given array.
-	 * 
-	 * @param index The index of the pad.
-	 * @param idArray The array which gets the updated values, where [0] is
-	 *                the device ID, [1] the vendor ID and [2] the product ID.
-	 */
-	public native void natGetControllerIDs(int index, int[] idArray);
 	
 	/**
 	 * Initializes the JNI wrapper.
@@ -190,11 +194,37 @@ public class GamepadJniWrapper {
 	public native void natRelease();
 	
 	/**
+	 * Returns the device ID of the given pad.
+	 * 
+	 * @param index The index of the pad.
+	 * @return The device ID (or -1 if the index was invalid).
+	 */
+	public native int natGetDeviceID(int index);
+	
+	/**
 	 * Returns the number of gamepads currently connected.
 	 * 
 	 * @return The number of pads.
 	 */
 	public native int natGetNumberOfPads();
+	
+	/**
+	 * Returns the number of analog axes on the given pad.
+	 * 
+	 * @param index The index of the pad.
+	 * @return The number of axes.
+	 */
+	public native int natGetNumberOfAxes(int index);
+	
+	/**
+	 * Returns the number of digital buttons on the given pad.
+	 * NOTE: Analog trigger buttons are handled like axes, not
+	 * like buttons.
+	 * 
+	 * @param index The index of the pad.
+	 * @return The number of buttons.
+	 */
+	public native int natGetNumberOfButtons(int index);
 
 	/**
 	 * Returns the ID of the pad with the given index.
@@ -208,4 +238,38 @@ public class GamepadJniWrapper {
 	 * Forces detection of connected gamepads.
 	 */
 	public native void natDetectPads();
+	
+	/**
+	 * Returns the description text for a given pad.
+	 * 
+	 * @param index The index of the pad.
+	 * @return The description text (or null).
+	 */
+	public native String natGetControllerDescription(int index);
+	
+	/**
+	 * Updates the various IDs for a given pad in the given array.
+	 * 
+	 * @param index The index of the pad.
+	 * @param idArray The array which gets the updated values, where [0] is
+	 *                the device ID, [1] the vendor ID and [2] the product ID.
+	 */
+	public native void natGetControllerIDs(int index, int[] idArray);
+	
+	/**
+	 * Updates the state of all digital buttons on the given controller.
+	 * 
+	 * @param index The index of the pad.
+	 * @param stateArray An array where every entry represents a button, and if it's
+	 *                   TRUE, the button is pressed.
+	 */
+	public native void natGetControllerButtonStates(int index, boolean[] stateArray);
+	
+	/**
+	 * Updates the state of all analog axes on the given controller.
+	 * 
+	 * @param index The index of the pad.
+	 * @param axesArray An array where every entry represents an axis.
+	 */
+	public native void natGetControllerAxesStates(int index, float[] axesArray);
 }

@@ -16,7 +16,7 @@ public class ControllerCheckThread implements Runnable {
 
 	/** Running flag. */
 	private static boolean running = true;
-
+	
 	/**
 	 * Stops this thread.
 	 */
