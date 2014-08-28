@@ -176,6 +176,21 @@ JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetCon
 
 /*
  * Class:     com_gamepad4j_controller_GamepadJniWrapper
+ * Method:    natGetControllerButtonState
+ * Signature: (B[])V
+ */
+JNIEXPORT jint JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetControllerButtonState(
+		JNIEnv *env, jobject obj, jint gamepadIndex, jint buttonIndex)
+{
+	struct Gamepad_device * device = Gamepad_deviceAtIndex(gamepadIndex);
+	if(device == NULL) {
+		return -1;
+	}
+	return device->buttonStates[buttonIndex];
+}
+
+/*
+ * Class:     com_gamepad4j_controller_GamepadJniWrapper
  * Method:    natGetControllerAxesStates
  * Signature: (F[])V
  */
@@ -196,6 +211,21 @@ JNIEXPORT void JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetCon
 	}
 
 	(*env)->ReleaseFloatArrayElements(env, axesArray, states, 0);
+}
+
+/*
+ * Class:     com_gamepad4j_controller_GamepadJniWrapper
+ * Method:    natGetControllerAxisState
+ * Signature: (B[])V
+ */
+JNIEXPORT jfloat JNICALL Java_com_gamepad4j_controller_GamepadJniWrapper_natGetControllerAxisState(
+		JNIEnv *env, jobject obj, jint gamepadIndex, jint axisIndex)
+{
+	struct Gamepad_device * device = Gamepad_deviceAtIndex(gamepadIndex);
+	if(device == NULL) {
+		return -1;
+	}
+	return device->axisStates[axisIndex];
 }
 
 

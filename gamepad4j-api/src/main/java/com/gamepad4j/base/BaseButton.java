@@ -6,6 +6,7 @@ package com.gamepad4j.base;
 
 import com.gamepad4j.ButtonID;
 import com.gamepad4j.IButton;
+import com.gamepad4j.IController;
 
 /**
  * Abstract base class for button wrappers.
@@ -13,7 +14,10 @@ import com.gamepad4j.IButton;
  * @author Marcel Schoen
  * @version $Revision: $
  */
-public abstract class AbstractBaseButton implements IButton {
+public class BaseButton implements IButton {
+
+	private float analogValue = -1;
+	private boolean isPressed = false;
 
 	/** Stores the deviceID of this button. */
 	protected ButtonID ID = ButtonID.UNKNOWN;
@@ -31,7 +35,10 @@ public abstract class AbstractBaseButton implements IButton {
 	protected boolean isAnalog = false;
 
 	/** The numeric code of the controller button. */
-	protected int code = -1;
+	protected int index = -1;
+	
+	/** Stores the controller to which this button belongs. */
+	protected IController controller = null;
 	
 	/**
 	 * Creates a button wrapper.
@@ -41,7 +48,8 @@ public abstract class AbstractBaseButton implements IButton {
 	 * @param label The text label (may be null).
 	 * @param labelKey The text label key (may be null).
 	 */
-	protected AbstractBaseButton(ButtonID ID, boolean isAnalog, String label, String labelKey) {
+	public BaseButton(IController controller, ButtonID ID, boolean isAnalog, String label, String labelKey) {
+		this.controller = controller;
 		this.ID = ID;
 		this.isAnalog = isAnalog;
 		this.label = label;
@@ -51,13 +59,14 @@ public abstract class AbstractBaseButton implements IButton {
 	/**
 	 * Creates a button wrapper.
 	 * 
-	 * @param code The numeric code of the button.
+	 * @param index The numeric index of the button.
 	 * @param isAnalog Set to true if this is an analog button.
 	 * @param label The text label (may be null).
 	 * @param labelKey The text label key (may be null).
 	 */
-	protected AbstractBaseButton(int code, boolean isAnalog, String label, String labelKey) {
-		this.code = code;
+	public BaseButton(IController controller, int index, boolean isAnalog, String label, String labelKey) {
+		this.controller = controller;
+		this.index = index;
 		this.isAnalog = isAnalog;
 		this.label = label;
 		this.labelKey = labelKey;
@@ -72,26 +81,53 @@ public abstract class AbstractBaseButton implements IButton {
 		return this.ID;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.util.AbstractBaseButton#getCode()
+	/*
+	 * (non-Javadoc)
+	 * @see com.gamepad4j.IButton#getIndex()
 	 */
 	@Override
-	public int getCode() {
-		return this.code;
+	public int getIndex() {
+		return this.index;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.gamepad4j.base.BaseButton#analogValue()
+	 */
+	@Override
+	public float analogValue() {
+		return analogValue;
+	}
+
+	/**
+	 * Sets the analog value of this button.
+	 * 
+	 * @param analogValue The analog value.
+	 */
+	public void setAnalogValue(float analogValue) {
+		this.analogValue = analogValue;
 	}
 
 	/* (non-Javadoc)
-	 * @see com.gamepad4j.util.IButton#analogValue()
+	 * @see com.gamepad4j.base.BaseButton#isPressed()
 	 */
 	@Override
-	public abstract float analogValue();
+	public boolean isPressed() {
+		return isPressed;
+	}
 
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.util.IButton#isPressed()
+	/**
+	 * Sets the pressed state of this button.
+	 * 
+	 * @param isPressed True if the button is pressed.
 	 */
-	@Override
-	public abstract boolean isPressed();
-
+	public void setPressed(boolean isPressed) {
+		if(isPressed != this.isPressed) {
+			System.out.println("Button " + this.index + " press change: " + isPressed);
+		}
+		this.isPressed = isPressed;
+		// TODO: Implement listener for buttons
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.gamepad4j.util.IButton#isAnalogue()
 	 */

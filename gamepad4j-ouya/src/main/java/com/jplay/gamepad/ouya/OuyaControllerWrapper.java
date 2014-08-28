@@ -54,7 +54,7 @@ public class OuyaControllerWrapper extends AbstractBaseController {
 	 * @param wrapped The wrapped controller.
 	 */
 	public OuyaControllerWrapper(OuyaController wrapped) {
-		super(String.valueOf("OUYA:" + wrapped.getDeviceId()));
+		super(wrapped.getDeviceId());
 		this.wrappedController = wrapped;
 		this.sticks[LEFT_STICK] = new OuyaControllerStick(StickID.LEFT_ANALOG, wrapped);
 		this.sticks[RIGHT_STICK] = new OuyaControllerStick(StickID.RIGHT_ANALOG, wrapped);
@@ -80,8 +80,8 @@ public class OuyaControllerWrapper extends AbstractBaseController {
 	 * @see com.gamepad4j.util.IController#getID()
 	 */
 	@Override
-	public String getID() {
-		return this.wrappedController.getDevice().getName();
+	public int getDeviceID() {
+		return this.wrappedController.getDeviceId();
 	}
 
 	/* (non-Javadoc)

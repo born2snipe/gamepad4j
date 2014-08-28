@@ -29,7 +29,7 @@ public interface IButton {
 	 * 
 	 * @return The buttons code.
 	 */
-	int getCode();
+	int getIndex();
 	
 	/**
 	 * Returns true if this is an analog button (like some

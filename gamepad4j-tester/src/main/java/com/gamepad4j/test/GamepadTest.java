@@ -19,6 +19,9 @@ public class GamepadTest {
 	}
 
 	private void runTest() {
-		new GamepadTestwindow().setVisible(true);;
+		new GamepadTestwindow().setVisible(true);
+		Thread checkThread = new Thread(new GamepadCheck());
+		checkThread.setDaemon(true);
+		checkThread.start();
 	}
 }

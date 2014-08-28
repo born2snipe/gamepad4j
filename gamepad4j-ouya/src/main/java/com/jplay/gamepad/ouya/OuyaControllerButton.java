@@ -7,7 +7,7 @@ package com.jplay.gamepad.ouya;
 import tv.ouya.console.api.OuyaController;
 
 import com.gamepad4j.ButtonID;
-import com.gamepad4j.base.AbstractBaseButton;
+import com.gamepad4j.base.BaseButton;
 
 /**
  * Wrapper for OUYA controller button.
@@ -15,7 +15,7 @@ import com.gamepad4j.base.AbstractBaseButton;
  * @author Marcel Schoen
  * @version $Revision: $
  */
-public class OuyaControllerButton extends AbstractBaseButton {
+public class OuyaControllerButton extends BaseButton {
 
 	/** Controller to which this button belongs. */
 	private OuyaController controller = null;

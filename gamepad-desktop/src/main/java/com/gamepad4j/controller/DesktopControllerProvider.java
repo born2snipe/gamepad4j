@@ -23,7 +23,7 @@ public class DesktopControllerProvider implements IControllerProvider {
 	/** Stores controller listeners. */
 	private ControllerListenerAdapter listeners = new ControllerListenerAdapter();
 
-	private static GamepadJniWrapper jniWrapper = null;
+	public static GamepadJniWrapper jniWrapper = null;
 
 	/** Map of all connected controllers (deviceID / controller). */
 	private static Map<Integer, DesktopController> connected = new HashMap<Integer, DesktopController>();
@@ -32,7 +32,7 @@ public class DesktopControllerProvider implements IControllerProvider {
 	private static DesktopController[] controllerPool = new DesktopController[16];
 	
 	/** Stores the array of controllers. */
-	private static IController[] controllerArray = null;
+//	private static IController[] controllerArray = null;
 	
 	/** Stores the number of connected controllers. */
 	private static int numberOfControllers = -1;
@@ -97,6 +97,7 @@ public class DesktopControllerProvider implements IControllerProvider {
 	 */
 	@Override
 	public void checkControllers() {
+		boolean updateArray = false;
 		jniWrapper.natDetectPads();
 		for(DesktopController controller : this.connected.values()) {
 			controller.setChecked(false);
@@ -116,6 +117,8 @@ public class DesktopControllerProvider implements IControllerProvider {
 					jniWrapper.updateControllerInfo(newController);
 					System.out.println("Newly connected controller found: " + newController.getDeviceID() + " / " + newController.getDescription());
 					this.connected.put(ct, newController);
+					listeners.getListeners().get(0).connected(newController);
+//					updateArray = true;
 				}
 			}
 		}
@@ -125,6 +128,8 @@ public class DesktopControllerProvider implements IControllerProvider {
 			if(!controller.isChecked()) {
 				System.out.println("Controller disconnected: " + controller.getDeviceID() + " / " + controller.getDescription());
 				this.connected.remove(controller.getDeviceID());
+				listeners.getListeners().get(0).disConnected(controller);
+//				updateArray = true;
 			}
 		}
 
@@ -132,15 +137,27 @@ public class DesktopControllerProvider implements IControllerProvider {
 		for(DesktopController controller : this.connected.values()) {
 			jniWrapper.updateControllerStatus(controller);
 		}
+		
+		/*
+		if(updateArray) {
+			this.controllerArray = new IController[this.connected.size()];
+			int i = 0;
+			for(DesktopController controller : this.connected.values()) {
+				this.controllerArray[i++] = controller;
+			}
+		}
+		*/
 	}
 
 	/* (non-Javadoc)
 	 * @see com.gamepad4j.IControllerProvider#getControllers()
 	 */
+	/*
 	@Override
 	public IController[] getControllers() {
 		return this.controllerArray;
 	}
+	*/
 
 	/* (non-Javadoc)
 	 * @see com.gamepad4j.IControllerProvider#supportsCallbacks()

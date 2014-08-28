@@ -75,7 +75,7 @@ public abstract class AbstractBaseController implements IController {
 	 */
 	protected void addButton(IButton button) {
 		this.buttonMap.put(button.getID(), button);
-		this.buttonCodeMap.put(button.getCode(), button);
+		this.buttonCodeMap.put(button.getIndex(), button);
 	}
 
 	/* (non-Javadoc)

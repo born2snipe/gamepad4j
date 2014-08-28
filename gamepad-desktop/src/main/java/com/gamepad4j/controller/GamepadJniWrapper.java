@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.gamepad4j.base.BaseButton;
 import com.gamepad4j.util.PlatformUtil;
 
 /**
@@ -45,32 +46,6 @@ public class GamepadJniWrapper {
 				System.err.println("GamepadJniWrapper.<init>: *** FAILED TO LOAD EITHER 32 OR 64 BIT LIBRARY ***");
 			}
 		}
-	}
-
-	/**
-	 * Callback method invoked from the native wrapper when a gamepad
-	 * is disconnected.
-	 * 
-	 * @param deviceID The device ID of the disconnected gamepad.
-	 */
-	public void callbackDisconnectDevice(int deviceID) {
-		System.out.println("GamepadJniWrapper.callbackDisconnectDevice(): *** Device disconnected / ID: " + deviceID + " ***");
-	}
-
-	/**
-	 * Callback method invoked from the native wrapper when a gamepad
-	 * is connected.
-	 * 
-	 * @param deviceID The device ID of the connected gamepad.
-	 */
-	public void callbackConnectDevice(int deviceID) {
-		System.out.println("GamepadJniWrapper.callbackConnectDevice(): *** Device connected / ID: " + deviceID + " ***");
-		/*
-		DesktopController newController = new DesktopController(0);
-		updateControllerStatus(newController);
-		System.out.println("-> CONTROLLER: deviceID=" + newController.getDeviceID() + " / DESC=" + newController.getDescription());
-		System.out.println("-> CONTROLLER: vendorID=" + newController.getVendorID() + " / productID=" + newController.getProductID());
-		*/
 	}
 	
 	/**
@@ -154,7 +129,9 @@ public class GamepadJniWrapper {
 		natGetControllerButtonStates(controller.getIndex(), buttonArray);
 		int numberOfButtons = natGetNumberOfButtons(controller.getIndex());
 		for(int i = 0; i < numberOfButtons; i++) {
-			
+			BaseButton button = (BaseButton)controller.getButton(i);
+			boolean isPressed = natGetControllerButtonState(controller.getIndex(), button.getIndex()) == 1;
+			button.setPressed(isPressed);
 		}
 	}
 	
@@ -170,6 +147,10 @@ public class GamepadJniWrapper {
 		controller.setDeviceID(idArray[0]);
 		controller.setVendorID(idArray[1]);
 		controller.setProductID(idArray[2]);
+		int numberOfButtons = natGetNumberOfButtons(controller.getIndex());
+		controller.createButtons(numberOfButtons);
+
+		// TODO / Axes
 	}
 	
 	/**
@@ -272,4 +253,20 @@ public class GamepadJniWrapper {
 	 * @param axesArray An array where every entry represents an axis.
 	 */
 	public native void natGetControllerAxesStates(int index, float[] axesArray);
+	
+	/**
+	 * Polls the state of a certain button of a certain controller.
+	 * 
+	 * @param index The index of the controller.
+	 * @param buttonIndex The index of the button.
+	 */
+	public native int natGetControllerButtonState(int index, int buttonIndex);
+
+	/**
+	 * Polls the state of a certain axis of a certain controller.
+	 * 
+	 * @param index The index of the controller.
+	 * @param axisIndex The index of the axis.
+	 */
+	public native float natGetControllerAxisState(int index, int axisIndex);
 }

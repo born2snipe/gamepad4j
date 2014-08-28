@@ -40,7 +40,7 @@ public interface IControllerProvider {
 	 * 
 	 * @return The currently connected controllers.
 	 */
-	IController[] getControllers();
+	//IController[] getControllers();
 	
 	/**
 	 * Must inform the caller if the implementation supports
