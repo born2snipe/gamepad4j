@@ -50,15 +50,6 @@ public class OuyaControllerProvider implements IControllerProvider {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.gamepad4j.util.IControllerProvider#supportsCallbacks()
-	 */
-	@Override
-	public boolean supportsCallbacks() {
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.gamepad4j.util.IControllerProvider#checkControllers()
 	 */
 	@Override

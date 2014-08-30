@@ -47,7 +47,7 @@ public class BaseButton implements IButton {
 	 * @param isAnalog Set to true if this is an analog button.
 	 * @param label The text label (may be null).
 	 * @param labelKey The text label key (may be null).
-	 */
+	 
 	public BaseButton(IController controller, ButtonID ID, boolean isAnalog, String label, String labelKey) {
 		this.controller = controller;
 		this.ID = ID;
@@ -55,6 +55,7 @@ public class BaseButton implements IButton {
 		this.label = label;
 		this.labelKey = labelKey;
 	}
+	*/
 	
 	/**
 	 * Creates a button wrapper.
@@ -81,6 +82,15 @@ public class BaseButton implements IButton {
 		return this.ID;
 	}
 
+	/**
+	 * Sets the ID of this button as defined by the mapping.
+	 * 
+	 * @param ID The ID for this button.
+	 */
+	public void setID(ButtonID ID) {
+		this.ID = ID;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see com.gamepad4j.IButton#getIndex()
@@ -122,7 +132,8 @@ public class BaseButton implements IButton {
 	 */
 	public void setPressed(boolean isPressed) {
 		if(isPressed != this.isPressed) {
-			System.out.println("Button " + this.index + " press change: " + isPressed);
+			System.out.println("Button press change: " + isPressed + "/ index: " + this.index + " / ID: "
+					+ this.ID + " / label: " + this.label + " / key: " + this.labelKey);
 		}
 		this.isPressed = isPressed;
 		// TODO: Implement listener for buttons
@@ -156,6 +167,22 @@ public class BaseButton implements IButton {
 	public String getLabelKey() {
 		return this.labelKey;
 	}
+
+	/**
+	 * @param label the label to set
+	 */
+	public void setDefaultLabel(String label) {
+		this.label = label;
+	}
+
+
+	/**
+	 * @param labelKey the labelKey to set
+	 */
+	public void setLabelKey(String labelKey) {
+		this.labelKey = labelKey;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see com.gamepad4j.util.IButton#getDefaultLabel()

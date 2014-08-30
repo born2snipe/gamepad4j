@@ -4,6 +4,10 @@
 
 package com.gamepad4j;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
+
 import com.gamepad4j.util.PlatformUtil;
 
 
@@ -37,6 +41,24 @@ public class Controllers implements IControllerListener {
 			providerType = "Ouya";
 		}
 		// TODO: Add more Android types (generic 4.x, Xperia Play, GameStik)
+		
+		try {
+			Enumeration<URL> resources = Controllers.class.getClassLoader().getResources("");
+			while(resources.hasMoreElements()) {
+				URL resourceURL = resources.nextElement();
+				System.out.println("RESOURCE: " + resourceURL);
+				String name = resourceURL.getFile();
+				if(name.endsWith(".properties")) {
+					System.out.println(">> FOUND RESOURCE FILE: " + resourceURL);
+				}
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		Mapping.initializeFromResources();
+		
 		try {
 			String providerClassName = "com.gamepad4j.controller." + providerType + "ControllerProvider";
 			Class providerClass = Class.forName(providerClassName);
@@ -44,13 +66,6 @@ public class Controllers implements IControllerListener {
 			controllerProvider.addListener(instance);
 			controllerProvider.initialize();
 			System.out.println("Controller provider ready: " + controllerProvider.getClass().getName());
-			if(!controllerProvider.supportsCallbacks()) {
-				Thread checkThread = new Thread(new ControllerCheckThread());
-				checkThread.setPriority(Thread.MIN_PRIORITY);
-				checkThread.setDaemon(true);
-				checkThread.start();
-				System.out.println("Controller check thread started.");
-			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new IllegalStateException("Failed to initialize controller provider instance: " + e);

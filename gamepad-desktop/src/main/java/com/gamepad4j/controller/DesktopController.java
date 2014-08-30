@@ -30,9 +30,6 @@ public class DesktopController extends AbstractBaseController {
 	/** Flag for tracking check status. */
 	private boolean checked = false;
 	
-	/** Stores the buttons of this controller. */
-	private BaseButton[] buttons = null;
-	
 	IStick[] sticks = new IStick[0];
 	Map<StickID, IStick> stickMap = new HashMap<StickID, IStick>();
 
@@ -46,18 +43,6 @@ public class DesktopController extends AbstractBaseController {
 		// Real value will be updated later through setter method.
 		super(0);
 		this.index = index;
-	}
-	
-	/**
-	 * Initializes the array of buttons for this controller.
-	 * 
-	 * @param number The number of buttons.
-	 */
-	public void createButtons(int number) {
-		this.buttons = new BaseButton[number];
-		for(int i = 0; i < this.buttons.length; i ++) {
-			this.buttons[i] = new BaseButton(this, i, false, "", "");
-		}
 	}
 	
 	/**
@@ -139,23 +124,6 @@ public class DesktopController extends AbstractBaseController {
 	 */
 	@Override
 	public IButton[] getButtons() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.IController#getButton(int)
-	 */
-	@Override
-	public IButton getButton(int buttonCode) {
-		return this.buttons[buttonCode];
-	}
-
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.IController#getButton(com.gamepad4j.ButtonID)
-	 */
-	@Override
-	public IButton getButton(ButtonID buttonID) {
 		// TODO Auto-generated method stub
 		return null;
 	}

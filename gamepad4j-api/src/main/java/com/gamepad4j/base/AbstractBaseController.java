@@ -11,6 +11,7 @@ import com.gamepad4j.ButtonID;
 import com.gamepad4j.DpadDirection;
 import com.gamepad4j.IButton;
 import com.gamepad4j.IController;
+import com.gamepad4j.Mapping;
 
 /**
  * Base class for controller wrappers.
@@ -38,11 +39,8 @@ public abstract class AbstractBaseController implements IController {
 	/** Lookup map for buttons based on their type. */
 	private Map<ButtonID, IButton> buttonMap = new HashMap<ButtonID, IButton>();
 	
-	/** Lookup map for buttons based on their numeric code. */
-	private Map<Integer, IButton> buttonCodeMap = new HashMap<Integer, IButton>();
-	
-	/** Stores the available buttons. */
-	private IButton[] buttons = null;
+	/** Stores the buttons of this controller. */
+	private BaseButton[] buttons = null;
 	
 	/**
 	 * Creates a controller wrapper.
@@ -69,13 +67,51 @@ public abstract class AbstractBaseController implements IController {
 	}
 	
 	/**
+	 * Initializes the array of buttons for this controller.
+	 * 
+	 * @param number The number of buttons.
+	 */
+	public void createButtons(int number) {
+		System.out.println("Create " + number + " buttons for pad...");
+		this.buttons = new BaseButton[number];
+		for(int i = 0; i < this.buttons.length; i ++) {
+			this.buttons[i] = new BaseButton(this, i, false, "", "");
+		}
+		
+		for(int i = 0; i < this.buttons.length; i ++) {
+			ButtonID mappedID = Mapping.getMappedID(this, this.buttons[i].getIndex());
+			if(mappedID != ButtonID.UNKNOWN) {
+				this.buttons[i].setID(mappedID);
+				this.buttonMap.put(mappedID, this.buttons[i]);
+				String label = Mapping.getButtonLabel(this, mappedID);
+				if(label != null) {
+					this.buttons[i].setDefaultLabel(label);
+				}
+				String labelKey = Mapping.getButtonLabelKey(this, mappedID);
+				if(labelKey != null) {
+					this.buttons[i].setLabelKey(labelKey);
+				}
+			} else {
+				System.out.println("No mapping found for button: " + this.buttons[i].getIndex());
+			}
+		}
+	}
+	
+	/**
 	 * Adds a button to the map of buttons.
 	 * 
 	 * @param button The button to add.
 	 */
 	protected void addButton(IButton button) {
 		this.buttonMap.put(button.getID(), button);
-		this.buttonCodeMap.put(button.getIndex(), button);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.gamepad4j.IController#getButton(int)
+	 */
+	@Override
+	public IButton getButton(int buttonCode) {
+		return this.buttons[buttonCode];
 	}
 
 	/* (non-Javadoc)
@@ -123,6 +159,7 @@ public abstract class AbstractBaseController implements IController {
 	 * @param vendorID the vendorID to set
 	 */
 	public void setVendorID(int vendorID) {
+		System.out.println("Set controller vendor ID: " + Integer.toHexString(vendorID));
 		this.vendorID = vendorID;
 	}
 
@@ -139,7 +176,22 @@ public abstract class AbstractBaseController implements IController {
 	 * @param productID the productID to set
 	 */
 	public void setProductID(int productID) {
+		System.out.println("Set controller product ID: " + Integer.toHexString(productID));
 		this.productID = productID;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.gamepad4j.IController#getDeviceIdentifier()
+	 */
+	@Override
+	public long getDeviceTypeIdentifier() {
+		if(this.vendorID == -1) {
+			throw new IllegalArgumentException("Vendor ID not set for controller " + this.deviceID + " / " + this.description);
+		}
+		if(this.productID == -1) {
+			throw new IllegalArgumentException("Product ID not set for controller " + this.deviceID + " / " + this.description);
+		}
+		return (vendorID << 16) + productID;
 	}
 
 	/* (non-Javadoc)
@@ -160,8 +212,7 @@ public abstract class AbstractBaseController implements IController {
 	 */
 	@Override
 	public boolean isButtonPressedOnce(ButtonID buttonID) {
-		return false;
-//		return getButton(buttonID).isPressedOnce();
+		return getButton(buttonID).isPressedOnce();
 	}
 
 	/* (non-Javadoc)
@@ -169,39 +220,7 @@ public abstract class AbstractBaseController implements IController {
 	 */
 	@Override
 	public IButton[] getButtons() {
-		if(this.buttons == null) {
-			// Some best-effort completions
-			// If either BACK or CANCEL was not set, use the same value for both
-			// (they are usually the same button)
-			if(this.buttonMap.get(ButtonID.BACK) == null && this.buttonMap.get(ButtonID.CANCEL) != null) {
-				this.buttonMap.put(ButtonID.BACK, this.buttonMap.get(ButtonID.CANCEL));
-			}
-			if(this.buttonMap.get(ButtonID.BACK) != null && this.buttonMap.get(ButtonID.CANCEL) == null) {
-				this.buttonMap.put(ButtonID.CANCEL, this.buttonMap.get(ButtonID.BACK));
-			}
-			// The same goes for PAUSE and MENU
-			if(this.buttonMap.get(ButtonID.PAUSE) == null && this.buttonMap.get(ButtonID.MENU) != null) {
-				this.buttonMap.put(ButtonID.PAUSE, this.buttonMap.get(ButtonID.MENU));
-			}
-			if(this.buttonMap.get(ButtonID.PAUSE) != null && this.buttonMap.get(ButtonID.MENU) == null) {
-				this.buttonMap.put(ButtonID.MENU, this.buttonMap.get(ButtonID.PAUSE));
-			}
-			this.buttons = new IButton[this.buttonMap.size()];
-			int ct = 0;
-			for(IButton button : this.buttonMap.values()) {
-				this.buttons[ct] = button;
-				ct ++;
-			}
-		}
 		return this.buttons;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.gamepad4j.util.IController#getButton(int)
-	 */
-	@Override
-	public IButton getButton(int buttonCode) {
-		return this.buttonCodeMap.get(buttonCode);
 	}
 
 	/* (non-Javadoc)

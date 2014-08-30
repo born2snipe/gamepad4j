@@ -61,4 +61,20 @@ public enum ButtonID {
 	public String getLabel() {
 		return this.defaultLabel;
 	}
+
+	/**
+	 * Returns the ButtonID object which has the same
+	 * name as the given string value.
+	 * 
+	 * @param value The ButtonID name to look for.
+	 * @return The ButtonID holder, or null.
+	 */
+	public static ButtonID getButtonIDfromString(String value) {
+		for(ButtonID id : values()) {
+			if(id.name().equals(value)) {
+				return id;
+			}
+		}
+		return null;
+	}
 }

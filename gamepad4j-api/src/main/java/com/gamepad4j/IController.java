@@ -13,6 +13,15 @@ package com.gamepad4j;
 public interface IController {
 
 	/**
+	 * Returns an identifier which is basically a combination of the
+	 * product ID and the vendor ID. This combined identifier is
+	 * used to retrieve the corresponding button / stick mappings.
+	 * 
+	 * @return The device identifier.
+	 */
+	long getDeviceTypeIdentifier();
+	
+	/**
 	 * Returns the deviceID of the joypad controller.
 	 * This is usually the USB device deviceID.
 	 * 

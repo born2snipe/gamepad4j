@@ -147,6 +147,7 @@ public class GamepadJniWrapper {
 		controller.setDeviceID(idArray[0]);
 		controller.setVendorID(idArray[1]);
 		controller.setProductID(idArray[2]);
+		
 		int numberOfButtons = natGetNumberOfButtons(controller.getIndex());
 		controller.createButtons(numberOfButtons);
 
