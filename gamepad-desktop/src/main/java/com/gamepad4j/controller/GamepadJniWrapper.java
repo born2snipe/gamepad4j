@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.gamepad4j.base.BaseButton;
+import com.gamepad4j.util.Log;
 import com.gamepad4j.util.PlatformUtil;
 
 /**
@@ -60,9 +61,9 @@ public class GamepadJniWrapper {
 			File temp = File.createTempFile("nativelib", "");
 			temp.delete();
 			temp.mkdir();
-			System.out.println("GamepadJniWrapper.unpackLibrary(): Using temporary directory: " + temp.getAbsolutePath());
-			System.out.println("GamepadJniWrapper.unpackLibrary(): exists: " + temp.exists());
-			System.out.println("GamepadJniWrapper.unpackLibrary(): Is directory: " + temp.isDirectory());
+			Log.log("GamepadJniWrapper.unpackLibrary(): Using temporary directory: " + temp.getAbsolutePath());
+			Log.log("GamepadJniWrapper.unpackLibrary(): exists: " + temp.exists());
+			Log.log("GamepadJniWrapper.unpackLibrary(): Is directory: " + temp.isDirectory());
 			if (temp.exists() && temp.isDirectory()) {
 				String subPath = "/32bit/";
 				if (use64bit) {
@@ -73,8 +74,8 @@ public class GamepadJniWrapper {
 						+ subPath;
 				String resourceName = path + library;
 				File libraryFile = new File(temp, library);
-				System.out.println("GamepadJniWrapper.unpackLibrary(): Extracting library resource: " + resourceName);
-				System.out.println("GamepadJniWrapper.unpackLibrary(): Extracting to local file: " + libraryFile.getCanonicalPath());
+				Log.log("GamepadJniWrapper.unpackLibrary(): Extracting library resource: " + resourceName);
+				Log.log("GamepadJniWrapper.unpackLibrary(): Extracting to local file: " + libraryFile.getCanonicalPath());
 				InputStream in = GamepadJniWrapper.class.getResourceAsStream(resourceName);
 				if(in != null) {
 					FileOutputStream out = new FileOutputStream(libraryFile);
@@ -86,7 +87,7 @@ public class GamepadJniWrapper {
 					out.flush();
 					out.close();
 					in.close();
-					System.out.println("GamepadJniWrapper.unpackLibrary(): Library successfully extracted.");
+					Log.log("GamepadJniWrapper.unpackLibrary(): Library successfully extracted.");
 				} else {
 					throw new IOException("Resource not found in classpath: " + resourceName);
 				}
@@ -110,9 +111,9 @@ public class GamepadJniWrapper {
 			if(libraryFile == null) {
 				throw new IllegalArgumentException("There must be a native library.");
 			}
-			System.out.println("GamepadJniWrapper.loadLibrary(): Trying to load library: " + libraryFile.getCanonicalPath());
+			Log.log("GamepadJniWrapper.loadLibrary(): Trying to load library: " + libraryFile.getCanonicalPath());
 			System.load(libraryFile.getCanonicalPath());
-			System.out.println("GamepadJniWrapper.loadLibrary(): Gamepad4j native library successfully loaded.");
+			Log.log("GamepadJniWrapper.loadLibrary(): Gamepad4j native library successfully loaded.");
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return false;
@@ -158,11 +159,11 @@ public class GamepadJniWrapper {
 	 * Initializes the JNI wrapper.
 	 */
 	public void initialize() {
-		System.out.println("GamepadJniWrapper.initialize(): initialize JNI wrapper...");
+		Log.log("GamepadJniWrapper.initialize(): initialize JNI wrapper...");
 		natInit();
-		System.out.println("GamepadJniWrapper.initialize(): detect pads...");
+		Log.log("GamepadJniWrapper.initialize(): detect pads...");
 		natDetectPads();
-		System.out.println("GamepadJniWrapper.initialize(): done.");
+		Log.log("GamepadJniWrapper.initialize(): done.");
 	}
 	
 	/**

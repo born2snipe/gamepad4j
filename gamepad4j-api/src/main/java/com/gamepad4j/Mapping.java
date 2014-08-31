@@ -246,7 +246,11 @@ public class Mapping {
 	 * @return The alias button ID, or null, if none was defined.
 	 */
 	public static ButtonID getAliasID(IController controller, ButtonID buttonID) {
-		return aliasMap.get(controller.getDeviceTypeIdentifier()).get(buttonID);
+		Map<ButtonID, ButtonID> aliasIDmap = aliasMap.get(controller.getDeviceTypeIdentifier());
+		if(aliasIDmap != null) {
+			return aliasIDmap.get(buttonID);
+		}
+		return null;
 	}
 	
 	/**

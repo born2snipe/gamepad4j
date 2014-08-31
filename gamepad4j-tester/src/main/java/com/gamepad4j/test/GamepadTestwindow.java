@@ -90,6 +90,7 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 	}
 	
 	private void updateWindow() {
+		System.out.println("--- controller change, update window ---");
 		getContentPane().removeAll();
 //		Controllers.checkControllers();
 		IController[] controllers = Controllers.getControllers();

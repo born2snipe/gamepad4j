@@ -4,13 +4,15 @@
 
 package com.gamepad4j.controller;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.gamepad4j.ControllerListenerAdapter;
 import com.gamepad4j.IControllerListener;
 import com.gamepad4j.IControllerProvider;
+import com.gamepad4j.util.Log;
 
 /**
  * Controller provider for desktop systems (Linux, MacOS X, Windows).
@@ -67,7 +69,7 @@ public class DesktopControllerProvider implements IControllerProvider {
 			if(controllerPool[i] != null) {
 				DesktopController reference = controllerPool[i]; 
 				reference.setIndex(index);
-				connected.put(index, reference);
+//				connected.put(index, reference);
 				controllerPool[i] = null;
 				return reference;
 			}
@@ -84,7 +86,6 @@ public class DesktopControllerProvider implements IControllerProvider {
 		for(int i = 0; i < controllerPool.length; i++) {
 			if(controllerPool[i] == null) {
 				controllerPool[i] = controller;
-				connected.remove(controller.getIndex());
 			}
 		}
 	}
@@ -100,7 +101,12 @@ public class DesktopControllerProvider implements IControllerProvider {
 		}
 		
 		// 1st check which controllers are (still) connected
-		this.numberOfControllers = jniWrapper.natGetNumberOfPads();
+		int newNumberOfControllers = jniWrapper.natGetNumberOfPads();
+		if(newNumberOfControllers != this.numberOfControllers) {
+			this.numberOfControllers = newNumberOfControllers;
+			Log.log("Number of controllers: " + this.numberOfControllers);
+		}
+//		Log.log("Check for newly connected controllers...");
 		for(int ct = 0; ct < this.numberOfControllers; ct++) {
 			int connectedId = jniWrapper.natGetDeviceID(ct);
 			if(connectedId != -1) {
@@ -114,24 +120,36 @@ public class DesktopControllerProvider implements IControllerProvider {
 					}
 					newController.setChecked(true);
 					jniWrapper.updateControllerInfo(newController);
-					System.out.println("Newly connected controller found: " + newController.getDeviceID() + " / " + newController.getDescription());
-					this.connected.put(ct, newController);
+					this.connected.put(newController.getDeviceID(), newController);
+					Log.log("***********************************************************************");
+					Log.log("Newly connected controller found: " + newController.getDeviceID()
+							+ " (" + Integer.toHexString(newController.getVendorID()) + "/"
+							+ Integer.toHexString(newController.getProductID()) 
+							+ ") / " + newController.getDescription());
+					Log.log("***********************************************************************");
 					listeners.getListeners().get(0).connected(newController);
 				}
 			}
 		}
 
 		// 2nd remove the controllers not found in the first loop
-		Collection<DesktopController> connectedControllers = this.connected.values();
-		for(DesktopController controller : connectedControllers) {
+//		Log.log("Check for disconnected controllers...");
+		Iterator<Entry<Integer, DesktopController>> iter = this.connected.entrySet().iterator();
+		while(iter.hasNext()) {
+			Entry<Integer, DesktopController> entry = iter.next();
+			DesktopController controller = entry.getValue();
 			if(!controller.isChecked()) {
-				System.out.println("Controller disconnected: " + controller.getDeviceID() + " / " + controller.getDescription());
+				Log.log("Controller disconnected: " + controller.getDeviceID() + " / " + controller.getDescription());
 				listeners.getListeners().get(0).disConnected(controller);
 				returnInstanceToPool(controller);
+				// Must be removed from map with iterator, otherwise
+				// ConcurrentModificationException will occur
+				iter.remove();
 			}
 		}
-
+		
 		// 3rd update the state of all remaining controllers
+//		Log.log("Update controllers...");
 		for(DesktopController controller : this.connected.values()) {
 			jniWrapper.updateControllerStatus(controller);
 		}
