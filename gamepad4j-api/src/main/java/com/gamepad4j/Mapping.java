@@ -34,12 +34,21 @@ public class Mapping {
 	/** Stores the label key for each buttong of each device type. */
 	private static Map<Long, Map<ButtonID, String>> labelKeyMap = new HashMap<Long, Map<ButtonID, String>>();
 
+	/** Stores the default button text labels. */
+	private static Properties defaultLabels = new Properties();
+	
 	/**
 	 * Initializes the mappings from the resource properties.
 	 */
 	public static void initializeFromResources() {
 		try {
-			InputStream in = Mapping.class.getResourceAsStream("/mappings/mapping-files.properties");
+			// Read the default text labels
+			InputStream in = Mapping.class.getResourceAsStream("/mappings/default-labels.properties");
+			defaultLabels.load(in);
+			in.close();
+			
+			// Read the mappings for the various pads
+			in = Mapping.class.getResourceAsStream("/mappings/mapping-files.properties");
 			Properties fileListProps = new Properties();
 			fileListProps.load(in);
 			for(Object fileListName : fileListProps.values()) {
@@ -50,6 +59,7 @@ public class Mapping {
 				mappingProps.load(propIn);
 				addMappings(mappingProps);
 			}
+			in.close();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 			throw new IllegalStateException("Failed to process mappings from resources: " + ex);
@@ -253,5 +263,15 @@ public class Mapping {
 			}
 		}
 		return ButtonID.UNKNOWN;
+	}
+	
+	/**
+	 * Returns the default text label for the given button.
+	 * 
+	 * @param buttonID The ID of the button.
+	 * @return The default label, or null.
+	 */
+	public static String getDefaultLabel(ButtonID buttonID) {
+		return defaultLabels.getProperty("buttonlabel." + buttonID.name());
 	}
 }

@@ -85,9 +85,11 @@ public abstract class AbstractBaseController implements IController {
 			ButtonID mappedID = Mapping.getMappedID(this, this.buttons[i].getIndex());
 			if(mappedID != ButtonID.UNKNOWN) {
 				this.buttons[i].setID(mappedID);
-				System.out.println("Store button '" + mappedID + "'");
 				this.buttonMap.put(mappedID, this.buttons[i]);
 				String label = Mapping.getButtonLabel(this, mappedID);
+				if(label == null) {
+					label = Mapping.getDefaultLabel(mappedID);
+				}
 				if(label != null) {
 					this.buttons[i].setDefaultLabel(label);
 				}
@@ -101,11 +103,9 @@ public abstract class AbstractBaseController implements IController {
 		}
 		// Now create alias mappings
 		for(ButtonID id : ButtonID.values()) {
-			System.out.println("> check for alias for button: " + id.name());
 			ButtonID aliasID = Mapping.getAliasID(this, id);
 			if(aliasID != null && aliasID != ButtonID.UNKNOWN) {
 				IButton button = this.buttonMap.get(aliasID);
-				System.out.println("Alias: " + aliasID + ", button: " + button);
 				this.buttonAliasMap.put(id, button);
 			}
 		}
