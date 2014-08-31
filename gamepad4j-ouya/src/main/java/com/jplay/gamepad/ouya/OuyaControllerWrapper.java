@@ -70,10 +70,10 @@ public class OuyaControllerWrapper extends AbstractBaseController {
 		addButton(new OuyaControllerButton(ButtonID.MENU, "OUYA", "jplay.ouya.button.OUYA", this.wrappedController));
 		addButton(new OuyaControllerButton(ButtonID.PAUSE, "OUYA", "jplay.ouya.button.OUYA", this.wrappedController));
 		addButton(new OuyaControllerButton(ButtonID.START, "O", "jplay.ouya.button.O", this.wrappedController));
-		addButton(new OuyaControllerButton(ButtonID.TRIGGER1_LEFT, "Left upper trigger", "jplay.ouya.button.leftUpperTrigger", this.wrappedController));
-		addButton(new OuyaControllerButton(ButtonID.TRIGGER2_LEFT, "Left lower trigger", "jplay.ouya.button.leftLowerTrigger", this.wrappedController));
-		addButton(new OuyaControllerButton(ButtonID.TRIGGER1_RIGHT, "Right upper trigger", "jplay.ouya.button.rightUpperTrigger", this.wrappedController));
-		addButton(new OuyaControllerButton(ButtonID.TRIGGER2_RIGHT, "Right lower trigger", "jplay.ouya.button.rightLowerTrigger", this.wrappedController));
+		addButton(new OuyaControllerButton(ButtonID.TRIGGER_LEFT_UP, "Left upper trigger", "jplay.ouya.button.leftUpperTrigger", this.wrappedController));
+		addButton(new OuyaControllerButton(ButtonID.TRIGGER_LEFT_DOWN, "Left lower trigger", "jplay.ouya.button.leftLowerTrigger", this.wrappedController));
+		addButton(new OuyaControllerButton(ButtonID.TRIGGER_RIGHT_UP, "Right upper trigger", "jplay.ouya.button.rightUpperTrigger", this.wrappedController));
+		addButton(new OuyaControllerButton(ButtonID.TRIGGER_RIGHT_DOWN, "Right lower trigger", "jplay.ouya.button.rightLowerTrigger", this.wrappedController));
 	}
 	
 	/* (non-Javadoc)

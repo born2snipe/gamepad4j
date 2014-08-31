@@ -43,23 +43,6 @@ public class BaseButton implements IButton {
 	/**
 	 * Creates a button wrapper.
 	 * 
-	 * @param deviceID The deviceID of this button.
-	 * @param isAnalog Set to true if this is an analog button.
-	 * @param label The text label (may be null).
-	 * @param labelKey The text label key (may be null).
-	 
-	public BaseButton(IController controller, ButtonID ID, boolean isAnalog, String label, String labelKey) {
-		this.controller = controller;
-		this.ID = ID;
-		this.isAnalog = isAnalog;
-		this.label = label;
-		this.labelKey = labelKey;
-	}
-	*/
-	
-	/**
-	 * Creates a button wrapper.
-	 * 
 	 * @param index The numeric index of the button.
 	 * @param isAnalog Set to true if this is an analog button.
 	 * @param label The text label (may be null).

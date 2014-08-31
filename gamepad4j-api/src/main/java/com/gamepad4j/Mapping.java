@@ -28,6 +28,9 @@ public class Mapping {
 	/** Stores the default label for each buttong of each device type. */
 	private static Map<Long, Map<ButtonID, String>> defaultLabelMap = new HashMap<Long, Map<ButtonID, String>>();
 
+	/** Stores button ID aliases. */
+	private static Map<Long, Map<ButtonID, ButtonID>> aliasMap = new HashMap<Long, Map<ButtonID, ButtonID>>();
+	
 	/** Stores the label key for each buttong of each device type. */
 	private static Map<Long, Map<ButtonID, String>> labelKeyMap = new HashMap<Long, Map<ButtonID, String>>();
 
@@ -95,6 +98,7 @@ public class Mapping {
 		}
 		long deviceTypeIdentifier = (vendorID << 16) + productID;
 		if(buttonIdMap.get(deviceTypeIdentifier) == null) {
+			aliasMap.put(deviceTypeIdentifier, new HashMap<ButtonID, ButtonID>());
 			buttonIdMap.put(deviceTypeIdentifier, new HashMap<Integer, ButtonID>());
 			buttonCodeMap.put(deviceTypeIdentifier, new HashMap<ButtonID, Integer>());
 			defaultLabelMap.put(deviceTypeIdentifier, new HashMap<ButtonID, String>());
@@ -178,17 +182,8 @@ public class Mapping {
 			// 2nd run: Set aliases for predefined mappings
 			ButtonID aliasID = ButtonID.getButtonIDfromString(value);
 			if(aliasID != null) {
-				System.out.println("Alias ID: " + aliasID);
 				try {
-					int buttonCode = buttonCodeMap.get(deviceIdentifier).get(aliasID);
-					System.out.println("-> defined for button code: " + buttonCode);
-					buttonIdMap.get(deviceIdentifier).put(buttonCode, buttonID);
-					buttonCodeMap.get(deviceIdentifier).put(buttonID, buttonCode);
-					
-					String label = defaultLabelMap.get(deviceIdentifier).get(aliasID);
-					defaultLabelMap.get(deviceIdentifier).put(buttonID, label);
-					String labelKey = labelKeyMap.get(deviceIdentifier).get(aliasID);
-					labelKeyMap.get(deviceIdentifier).put(buttonID, labelKey);
+					aliasMap.get(deviceIdentifier).put(buttonID, aliasID);
 				} catch(Exception ex) {
 					throw new IllegalArgumentException("Invalid/unknown button alias '" + value + "' in mapping.");
 				}
@@ -229,6 +224,17 @@ public class Mapping {
 	 */
 	public static String getButtonLabelKey(IController controller, ButtonID buttonID) {
 		return labelKeyMap.get(controller.getDeviceTypeIdentifier()).get(buttonID);
+	}
+	
+	/**
+	 * Returns the alias butotn ID for the given button.
+	 * 
+	 * @param controller The controller to which the button belongs.
+	 * @param buttonID The ID of the button.
+	 * @return The alias button ID, or null, if none was defined.
+	 */
+	public static ButtonID getAliasID(IController controller, ButtonID buttonID) {
+		return aliasMap.get(controller.getDeviceTypeIdentifier()).get(buttonID);
 	}
 	
 	/**

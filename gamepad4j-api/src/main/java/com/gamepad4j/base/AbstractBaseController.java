@@ -38,6 +38,9 @@ public abstract class AbstractBaseController implements IController {
 
 	/** Lookup map for buttons based on their type. */
 	private Map<ButtonID, IButton> buttonMap = new HashMap<ButtonID, IButton>();
+
+	/** Lookup map for button aliases. */
+	private Map<ButtonID, IButton> buttonAliasMap = new HashMap<ButtonID, IButton>();
 	
 	/** Stores the buttons of this controller. */
 	private BaseButton[] buttons = null;
@@ -82,6 +85,7 @@ public abstract class AbstractBaseController implements IController {
 			ButtonID mappedID = Mapping.getMappedID(this, this.buttons[i].getIndex());
 			if(mappedID != ButtonID.UNKNOWN) {
 				this.buttons[i].setID(mappedID);
+				System.out.println("Store button '" + mappedID + "'");
 				this.buttonMap.put(mappedID, this.buttons[i]);
 				String label = Mapping.getButtonLabel(this, mappedID);
 				if(label != null) {
@@ -93,6 +97,16 @@ public abstract class AbstractBaseController implements IController {
 				}
 			} else {
 				System.out.println("No mapping found for button: " + this.buttons[i].getIndex());
+			}
+		}
+		// Now create alias mappings
+		for(ButtonID id : ButtonID.values()) {
+			System.out.println("> check for alias for button: " + id.name());
+			ButtonID aliasID = Mapping.getAliasID(this, id);
+			if(aliasID != null && aliasID != ButtonID.UNKNOWN) {
+				IButton button = this.buttonMap.get(aliasID);
+				System.out.println("Alias: " + aliasID + ", button: " + button);
+				this.buttonAliasMap.put(id, button);
 			}
 		}
 	}
@@ -228,7 +242,11 @@ public abstract class AbstractBaseController implements IController {
 	 */
 	@Override
 	public IButton getButton(ButtonID buttonID) {
-		return this.buttonMap.get(buttonID);
+		IButton button = this.buttonMap.get(buttonID);
+		if(button == null) {
+			button = this.buttonAliasMap.get(buttonID);
+		}
+		return button;
 	}
 
 	/* (non-Javadoc)

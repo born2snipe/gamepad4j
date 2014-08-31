@@ -12,19 +12,29 @@ package com.gamepad4j;
  */
 public enum ButtonID {
 
+	/** Digital face buttons */
 	FACE_UP("Upper face-button"),
 	FACE_DOWN("Lower face-button"),
 	FACE_LEFT("Left face-button"),
 	FACE_RIGHT("Right face-button"),
 	
-	TRIGGER1_LEFT("Left upper trigger"),
-	TRIGGER2_LEFT("Left lower trigger"),
-	TRIGGER1_RIGHT("Right upper trigger"),
-	TRIGGER2_RIGHT("Right lower trigger"),
+	/** Digital shoulder buttons */
+	SHOULDER_LEFT_UP("Left upper shoulder button"),
+	SHOULDER_LEFT_DOWN("Left lower shoulder button"),
+	SHOULDER_RIGHT_UP("Right upper shoulder button"),
+	SHOULDER_RIGHT_DOWN("Right lower shoulder button"),
+	
+	/** Analog trigger buttons */
+	TRIGGER_LEFT_UP("Left upper trigger"),
+	TRIGGER_LEFT_DOWN("Left lower trigger"),
+	TRIGGER_RIGHT_UP("Right upper trigger"),
+	TRIGGER_RIGHT_DOWN("Right lower trigger"),
 
+	/** Thumbsticks */
 	LEFT_ANALOG_STICK("Left analog stick"),
 	RIGHT_ANALOG_STICK("Right analog stick"),
-	
+
+	/** Special buttons */
 	ACCEPT("Accept"),
 	CANCEL("Cancel"),
 	MENU("Menu"),
@@ -32,7 +42,8 @@ public enum ButtonID {
 	BACK("Back"),
 	PAUSE("Pause"),
 	START("Start"),
-	
+
+	/** D-Pad (which may in fact be analog */
 	D_PAD_UP("D-Pad Up"),
 	D_PAD_DOWN("D-Pad Down"),
 	D_PAD_LEFT("D-Pad Left"),

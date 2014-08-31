@@ -32,6 +32,10 @@ public class GamepadCheck implements Runnable {
 				if(acceptButton != null && acceptButton.isPressedOnce()) {
 					System.out.println("*** ACCEPT ***");
 				}
+				IButton cancelButton = controllers[0].getButton(ButtonID.CANCEL);
+				if(cancelButton != null && cancelButton.isPressedOnce()) {
+					System.out.println("*** CANCEL / DENY ***");
+				}
 			}
 			try {
 				Thread.sleep(150);

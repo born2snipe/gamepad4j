@@ -52,19 +52,19 @@ public class OuyaControllerButton extends BaseButton {
 			this.code = OuyaController.BUTTON_A;
 		} else if(id == ButtonID.FACE_UP) {
 			this.code = OuyaController.BUTTON_Y;
-		} else if(id == ButtonID.TRIGGER1_LEFT) {
+		} else if(id == ButtonID.TRIGGER_LEFT_UP) {
 			this.code = OuyaController.BUTTON_L1;
-		} else if(id == ButtonID.TRIGGER2_LEFT) {
+		} else if(id == ButtonID.TRIGGER_LEFT_DOWN) {
 			this.isAnalog = true;
 			this.code = OuyaController.AXIS_L2;
-		} else if(id == ButtonID.TRIGGER1_RIGHT) {
+		} else if(id == ButtonID.TRIGGER_RIGHT_UP) {
 			this.code = OuyaController.BUTTON_R1;
-		} else if(id == ButtonID.TRIGGER2_RIGHT) {
+		} else if(id == ButtonID.TRIGGER_RIGHT_DOWN) {
 			this.isAnalog = true;
 			this.code = OuyaController.AXIS_R2;
-		} else if(id == ButtonID.TRIGGER1_LEFT) {
+		} else if(id == ButtonID.TRIGGER_LEFT_UP) {
 			this.code = OuyaController.BUTTON_L1;
-		} else if(id == ButtonID.TRIGGER1_LEFT) {
+		} else if(id == ButtonID.TRIGGER_LEFT_UP) {
 			this.code = OuyaController.BUTTON_L1;
 		} else if(id == ButtonID.MENU) {
 			this.code = OuyaController.BUTTON_MENU;
