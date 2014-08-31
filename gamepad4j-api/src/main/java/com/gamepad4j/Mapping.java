@@ -184,6 +184,11 @@ public class Mapping {
 					System.out.println("-> defined for button code: " + buttonCode);
 					buttonIdMap.get(deviceIdentifier).put(buttonCode, buttonID);
 					buttonCodeMap.get(deviceIdentifier).put(buttonID, buttonCode);
+					
+					String label = defaultLabelMap.get(deviceIdentifier).get(aliasID);
+					defaultLabelMap.get(deviceIdentifier).put(buttonID, label);
+					String labelKey = labelKeyMap.get(deviceIdentifier).get(aliasID);
+					labelKeyMap.get(deviceIdentifier).put(buttonID, labelKey);
 				} catch(Exception ex) {
 					throw new IllegalArgumentException("Invalid/unknown button alias '" + value + "' in mapping.");
 				}
