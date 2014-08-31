@@ -178,10 +178,12 @@ public class Mapping {
 			// 2nd run: Set aliases for predefined mappings
 			ButtonID aliasID = ButtonID.getButtonIDfromString(value);
 			if(aliasID != null) {
+				System.out.println("Alias ID: " + aliasID);
 				try {
 					int buttonCode = buttonCodeMap.get(deviceIdentifier).get(aliasID);
-					buttonIdMap.get(deviceIdentifier).put(buttonCode, aliasID);
-					buttonCodeMap.get(deviceIdentifier).put(aliasID, buttonCode);
+					System.out.println("-> defined for button code: " + buttonCode);
+					buttonIdMap.get(deviceIdentifier).put(buttonCode, buttonID);
+					buttonCodeMap.get(deviceIdentifier).put(buttonID, buttonCode);
 				} catch(Exception ex) {
 					throw new IllegalArgumentException("Invalid/unknown button alias '" + value + "' in mapping.");
 				}
