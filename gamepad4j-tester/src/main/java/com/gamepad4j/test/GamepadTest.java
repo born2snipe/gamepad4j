@@ -6,7 +6,7 @@ package com.gamepad4j.test;
 
 
 /**
- * ...
+ * Starts test program.
  *
  * @author Marcel Schoen
  * @version $Revision: $

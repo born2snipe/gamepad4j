@@ -22,11 +22,14 @@ public class Mapping {
 	/** Stores the buttonID to code mapping, for each device type. */
 	private static Map<Long, Map<Integer, ButtonID>> buttonIdMap = new HashMap<Long, Map<Integer, ButtonID>>();
 
+	/** Stores the code to buttonID mapping, for each device type. */
+	private static Map<Long, Map<ButtonID, Integer>> buttonCodeMap = new HashMap<Long, Map<ButtonID, Integer>>();
+
 	/** Stores the default label for each buttong of each device type. */
-	private static Map<Long, String> defaultLabelMap = new HashMap<Long, String>();
+	private static Map<Long, Map<ButtonID, String>> defaultLabelMap = new HashMap<Long, Map<ButtonID, String>>();
 
 	/** Stores the label key for each buttong of each device type. */
-	private static Map<Long, String> labelKeyMap = new HashMap<Long, String>();
+	private static Map<Long, Map<ButtonID, String>> labelKeyMap = new HashMap<Long, Map<ButtonID, String>>();
 
 	/**
 	 * Initializes the mappings from the resource properties.
@@ -93,8 +96,12 @@ public class Mapping {
 		long deviceTypeIdentifier = (vendorID << 16) + productID;
 		if(buttonIdMap.get(deviceTypeIdentifier) == null) {
 			buttonIdMap.put(deviceTypeIdentifier, new HashMap<Integer, ButtonID>());
+			buttonCodeMap.put(deviceTypeIdentifier, new HashMap<ButtonID, Integer>());
+			defaultLabelMap.put(deviceTypeIdentifier, new HashMap<ButtonID, String>());
+			labelKeyMap.put(deviceTypeIdentifier, new HashMap<ButtonID, String>());
 		}
-		
+
+		// 1st run / define mappings
 		Enumeration<Object> keys = properties.keys();
 		while(keys.hasMoreElements()) {
 			String key = (String)keys.nextElement();
@@ -104,11 +111,32 @@ public class Mapping {
 			} else if(key.startsWith("axis.")) {
 				addAxisMapping(deviceTypeIdentifier, key, value);
 			} else if(key.startsWith("buttonlabel.")) {
-				defaultLabelMap.put(deviceTypeIdentifier, value);
+				defaultLabelMap.get(deviceTypeIdentifier).put(getButtonIDfromPropertyKey(key), value);
 			} else if(key.startsWith("buttonlabelkey.")) {
-				labelKeyMap.put(deviceTypeIdentifier, value);
+				labelKeyMap.get(deviceTypeIdentifier).put(getButtonIDfromPropertyKey(key), value);
 			}
 		}
+		// 2nd run / set aliases
+		keys = properties.keys();
+		while(keys.hasMoreElements()) {
+			String key = (String)keys.nextElement();
+			String value = properties.getProperty(key);
+			if(key.startsWith("button.")) {
+				addButtonAliasMapping(deviceTypeIdentifier, key, value);
+			}
+		}
+	}
+
+	/**
+	 * @param key
+	 */
+	public static ButtonID getButtonIDfromPropertyKey(String key) {
+		String buttonIDvalue = key.substring(key.indexOf(".") + 1);
+		ButtonID id = ButtonID.getButtonIDfromString(buttonIDvalue);
+		if(id == null) {
+			throw new IllegalArgumentException("Invalid button ID in property key '" + key + "'");
+		}
+		return id;
 	}
 
 	/**
@@ -119,21 +147,21 @@ public class Mapping {
 	 * @param value The mapping property value.
 	 */
 	private static void addButtonMapping(long deviceIdentifier, String key, String value) {
-		String buttonIDvalue = key.substring(key.indexOf(".") + 1);
-		ButtonID buttonID = ButtonID.getButtonIDfromString(buttonIDvalue);
+		ButtonID buttonID = getButtonIDfromPropertyKey(key);
 		if(buttonID != null) {
-			String[] numbers = value.split("[,]");
-			for(String number : numbers) {
+			ButtonID aliasID = ButtonID.getButtonIDfromString(value);
+			if(aliasID == null) {
 				try {
-					int code = Integer.parseInt(number);
+					int code = Integer.parseInt(value);
 					buttonIdMap.get(deviceIdentifier).put(code, buttonID);
+					buttonCodeMap.get(deviceIdentifier).put(buttonID, code);
 				} catch(NumberFormatException ex) {
-					throw new IllegalArgumentException("Invalid numerical button code '" + number 
-							+ "' for buttonID '" + buttonIDvalue + "' in mapping.");
+					throw new IllegalArgumentException("Invalid numerical button code '" + value 
+							+ "' in property '" + key + "' in mapping.");
 				}
 			}
 		} else {
-			throw new IllegalArgumentException("Invalid/unknown button ID '" + buttonIDvalue + "' in mapping.");
+			throw new IllegalArgumentException("Invalid/unknown button ID in property '" + key + "' in mapping.");
 		}
 	}
 
@@ -144,26 +172,24 @@ public class Mapping {
 	 * @param key The mapping property key.
 	 * @param value The mapping property value.
 	 */
-	/*
 	private static void addButtonAliasMapping(long deviceIdentifier, String key, String value) {
-		String buttonIDvalue = key.substring(key.indexOf(".") + 1);
-		ButtonID buttonID = ButtonID.getButtonIDfromString(buttonIDvalue);
+		ButtonID buttonID = getButtonIDfromPropertyKey(key);
 		if(buttonID != null) {
-			String[] numbers = value.split("[,]");
-			for(String number : numbers) {
-				// 2nd run: Set aliases for predefined mappings
-				ButtonID aliasID = ButtonID.getButtonIDfromString(number);
-				if(aliasID != null) {
-					Map<Integer, ButtonID>buttonMap = buttonIdMap.get(deviceIdentifier);
-					// TODO
+			// 2nd run: Set aliases for predefined mappings
+			ButtonID aliasID = ButtonID.getButtonIDfromString(value);
+			if(aliasID != null) {
+				try {
+					int buttonCode = buttonCodeMap.get(deviceIdentifier).get(aliasID);
+					buttonIdMap.get(deviceIdentifier).put(buttonCode, aliasID);
+					buttonCodeMap.get(deviceIdentifier).put(aliasID, buttonCode);
+				} catch(Exception ex) {
+					throw new IllegalArgumentException("Invalid/unknown button alias '" + value + "' in mapping.");
 				}
 			}
 		} else {
-			throw new IllegalArgumentException("Invalid/unknown button ID '" + buttonIDvalue + "' in mapping.");
+			throw new IllegalArgumentException("Invalid/unknown button ID in property '" + key + "' in mapping.");
 		}
 	}
-	*/
-	
 	
 	/**
 	 * Processes / creates the mappings for analog axes.
@@ -184,7 +210,7 @@ public class Mapping {
 	 * @return The default text, or null, if none was defined.
 	 */
 	public static String getButtonLabel(IController controller, ButtonID buttonID) {
-		return defaultLabelMap.get(controller.getDeviceTypeIdentifier());
+		return defaultLabelMap.get(controller.getDeviceTypeIdentifier()).get(buttonID);
 	}
 	
 	/**
@@ -195,7 +221,7 @@ public class Mapping {
 	 * @return The resource key, or null, if none was defined.
 	 */
 	public static String getButtonLabelKey(IController controller, ButtonID buttonID) {
-		return labelKeyMap.get(controller.getDeviceTypeIdentifier());
+		return labelKeyMap.get(controller.getDeviceTypeIdentifier()).get(buttonID);
 	}
 	
 	/**

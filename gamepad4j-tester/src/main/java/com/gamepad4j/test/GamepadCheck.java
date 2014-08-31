@@ -7,7 +7,7 @@ package com.gamepad4j.test;
 import com.gamepad4j.Controllers;
 
 /**
- * ...
+ * Simulates game loop.
  *
  * @author Marcel Schoen
  * @version $Revision: $
