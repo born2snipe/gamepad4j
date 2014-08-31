@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.gamepad4j.util.Log;
+
 /**
  * Handles mappings for numerical button and axis index values to meaningful constants.
  * The mappings are defined in properties read from files, classpath resources etc.
@@ -53,7 +55,7 @@ public class Mapping {
 			fileListProps.load(in);
 			for(Object fileListName : fileListProps.values()) {
 				String propertyFileName = (String)fileListName;
-				System.out.println("> processing mapping file: " + propertyFileName);
+				Log.log("> processing mapping file: " + propertyFileName);
 				InputStream propIn = Mapping.class.getResourceAsStream(propertyFileName);
 				Properties mappingProps = new Properties();
 				mappingProps.load(propIn);

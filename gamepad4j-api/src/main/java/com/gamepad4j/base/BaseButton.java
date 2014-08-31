@@ -7,6 +7,7 @@ package com.gamepad4j.base;
 import com.gamepad4j.ButtonID;
 import com.gamepad4j.IButton;
 import com.gamepad4j.IController;
+import com.gamepad4j.util.Log;
 
 /**
  * Abstract base class for button wrappers.
@@ -115,7 +116,7 @@ public class BaseButton implements IButton {
 	 */
 	public void setPressed(boolean isPressed) {
 		if(isPressed != this.isPressed) {
-			System.out.println("Button press change: " + isPressed + "/ index: " + this.index + " / ID: "
+			Log.log("Button press change: " + isPressed + "/ index: " + this.index + " / ID: "
 					+ this.ID + " / label: " + this.label + " / key: " + this.labelKey);
 		}
 		this.isPressed = isPressed;

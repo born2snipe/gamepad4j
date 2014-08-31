@@ -6,6 +6,7 @@ package com.gamepad4j.test;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -23,7 +24,12 @@ public class ControllerPanel extends JPanel {
 	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	    setBorder(BorderFactory.createLoweredBevelBorder());
 //	    setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
-	    JLabel label = new JLabel(GamepadTestwindow.padImage, JLabel.CENTER);
+	    
+	    ImageIcon padImage = GamepadTestwindow.padImageMap.get(controller.getDeviceTypeIdentifier());
+	    if(padImage == null) {
+		    padImage = GamepadTestwindow.padImageMap.get(0L);
+	    }
+	    JLabel label = new JLabel(padImage, JLabel.CENTER);
 	    add(label);
 	}
 

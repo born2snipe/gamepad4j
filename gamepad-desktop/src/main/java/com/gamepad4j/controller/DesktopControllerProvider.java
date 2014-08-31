@@ -4,11 +4,11 @@
 
 package com.gamepad4j.controller;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.gamepad4j.ControllerListenerAdapter;
-import com.gamepad4j.IController;
 import com.gamepad4j.IControllerListener;
 import com.gamepad4j.IControllerProvider;
 
@@ -93,8 +93,7 @@ public class DesktopControllerProvider implements IControllerProvider {
 	 * @see com.gamepad4j.IControllerProvider#checkControllers()
 	 */
 	@Override
-	public void checkControllers() {
-		boolean updateArray = false;
+	public synchronized void checkControllers() {
 		jniWrapper.natDetectPads();
 		for(DesktopController controller : this.connected.values()) {
 			controller.setChecked(false);
@@ -110,6 +109,9 @@ public class DesktopControllerProvider implements IControllerProvider {
 					controller.setChecked(true);
 				} else {
 					DesktopController newController = getInstanceFromPool(ct);
+					if(newController == null) {
+						throw new IllegalStateException("** DesktopController instance pool exceeded! **");
+					}
 					newController.setChecked(true);
 					jniWrapper.updateControllerInfo(newController);
 					System.out.println("Newly connected controller found: " + newController.getDeviceID() + " / " + newController.getDescription());
@@ -120,11 +122,12 @@ public class DesktopControllerProvider implements IControllerProvider {
 		}
 
 		// 2nd remove the controllers not found in the first loop
-		for(DesktopController controller : this.connected.values()) {
+		Collection<DesktopController> connectedControllers = this.connected.values();
+		for(DesktopController controller : connectedControllers) {
 			if(!controller.isChecked()) {
 				System.out.println("Controller disconnected: " + controller.getDeviceID() + " / " + controller.getDescription());
-				this.connected.remove(controller.getDeviceID());
 				listeners.getListeners().get(0).disConnected(controller);
+				returnInstanceToPool(controller);
 			}
 		}
 

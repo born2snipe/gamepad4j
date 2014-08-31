@@ -12,6 +12,7 @@ import com.gamepad4j.DpadDirection;
 import com.gamepad4j.IButton;
 import com.gamepad4j.IController;
 import com.gamepad4j.Mapping;
+import com.gamepad4j.util.Log;
 
 /**
  * Base class for controller wrappers.
@@ -75,7 +76,7 @@ public abstract class AbstractBaseController implements IController {
 	 * @param number The number of buttons.
 	 */
 	public void createButtons(int number) {
-		System.out.println("Create " + number + " buttons for pad...");
+		Log.log("Create " + number + " buttons for pad...");
 		this.buttons = new BaseButton[number];
 		for(int i = 0; i < this.buttons.length; i ++) {
 			this.buttons[i] = new BaseButton(this, i, false, "", "");
@@ -98,7 +99,7 @@ public abstract class AbstractBaseController implements IController {
 					this.buttons[i].setLabelKey(labelKey);
 				}
 			} else {
-				System.out.println("No mapping found for button: " + this.buttons[i].getIndex());
+				Log.log("No mapping found for button: " + this.buttons[i].getIndex());
 			}
 		}
 		// Now create alias mappings
@@ -173,7 +174,7 @@ public abstract class AbstractBaseController implements IController {
 	 * @param vendorID the vendorID to set
 	 */
 	public void setVendorID(int vendorID) {
-		System.out.println("Set controller vendor ID: " + Integer.toHexString(vendorID));
+		Log.log("Set controller vendor ID: " + Integer.toHexString(vendorID));
 		this.vendorID = vendorID;
 	}
 
@@ -190,7 +191,7 @@ public abstract class AbstractBaseController implements IController {
 	 * @param productID the productID to set
 	 */
 	public void setProductID(int productID) {
-		System.out.println("Set controller product ID: " + Integer.toHexString(productID));
+		Log.log("Set controller product ID: " + Integer.toHexString(productID));
 		this.productID = productID;
 	}
 	
