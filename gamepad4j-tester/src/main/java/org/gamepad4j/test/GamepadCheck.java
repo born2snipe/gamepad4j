@@ -6,6 +6,7 @@ package org.gamepad4j.test;
 
 import org.gamepad4j.ButtonID;
 import org.gamepad4j.Controllers;
+import org.gamepad4j.DpadDirection;
 import org.gamepad4j.IButton;
 import org.gamepad4j.IController;
 import org.gamepad4j.ITrigger;
@@ -39,12 +40,19 @@ public class GamepadCheck implements Runnable {
 					System.out.println("*** CANCEL / DENY ***");
 				}
 				
-				ITrigger triggerLeft = controllers[0].getTrigger(TriggerID.TRIGGER_LEFT_DOWN);
+				ITrigger triggerLeft = controllers[0].getTrigger(TriggerID.LEFT_DOWN);
 				if(triggerLeft == null) {
 					System.err.println("no left trigger button found");
 				} else {
 					float trigger = triggerLeft.analogValue();
-					System.out.println("> left trigger button: " + trigger);
+					if(trigger < -0.2 || trigger > 0.2) {
+						System.out.println("> left trigger button: " + trigger);
+					}
+				}
+
+				DpadDirection dpad = controllers[0].getDpadDirection();
+				if(dpad != DpadDirection.NONE) {
+					System.out.println("D-Pad: " + dpad);
 				}
 				
 				/*

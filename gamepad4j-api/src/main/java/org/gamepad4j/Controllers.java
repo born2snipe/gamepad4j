@@ -39,7 +39,7 @@ public class Controllers implements IControllerListener {
 		}
 		// TODO: Add more Android types (generic 4.x, Xperia Play, GameStik)
 		
-		Mapping.initializeFromResources();
+		Mapping2.initializeFromResources();
 		
 		try {
 			String providerClassName = "org.gamepad4j." + providerType.toLowerCase() + "." + providerType + "ControllerProvider";

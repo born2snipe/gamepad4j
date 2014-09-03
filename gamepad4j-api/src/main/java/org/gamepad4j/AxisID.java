@@ -5,7 +5,7 @@
 package org.gamepad4j;
 
 /**
- * Enumeration of IDs of gamepad sticks, pads, accelerometers etc.
+ * Enumeration of IDs of analog axis types (sticks, d-pads, triggers).
  *
  * @author Marcel Schoen
  * @version $Revision: $
@@ -14,6 +14,8 @@ public enum AxisID {
 
 	X,
 	Y,
+	D_PAD_X,
+	D_PAD_Y,
 	TRIGGER
 	;
 }

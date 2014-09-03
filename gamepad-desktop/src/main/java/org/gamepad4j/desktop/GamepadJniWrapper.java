@@ -163,10 +163,12 @@ public class GamepadJniWrapper {
 		controller.setProductID(idArray[2]);
 		
 		int numberOfButtons = natGetNumberOfButtons(controller.getIndex());
-		controller.createDigitalButtons(numberOfButtons);
+		controller.createButtons(numberOfButtons);
+//		controller.createDigitalButtons(numberOfButtons);
 
 		int numberOfAxes = natGetNumberOfAxes(controller.getIndex());
-		controller.createTriggersAndSticks(numberOfAxes);
+		controller.createAxes(numberOfAxes);
+//		controller.createTriggersAndSticks(numberOfAxes);
 	}
 	
 	/**

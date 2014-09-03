@@ -13,10 +13,10 @@ package org.gamepad4j;
 public enum TriggerID {
 	
 	/** Analog trigger buttons */
-	TRIGGER_LEFT_UP("Left upper trigger"),
-	TRIGGER_LEFT_DOWN("Left lower trigger"),
-	TRIGGER_RIGHT_UP("Right upper trigger"),
-	TRIGGER_RIGHT_DOWN("Right lower trigger"),
+	LEFT_UP("Left upper trigger"),
+	LEFT_DOWN("Left lower trigger"),
+	RIGHT_UP("Right upper trigger"),
+	RIGHT_DOWN("Right lower trigger"),
 	
 	UNKNOWN("Unknown")
 	;
