@@ -11,14 +11,9 @@ package org.gamepad4j;
  * @version $Revision: $
  */
 public enum StickID {
-
-	SLIDER_FRONT,
-	SLIDER_BACK,
 	
-	ACCELEROMETER,
-	
-	LEFT_ANALOG,
-	RIGHT_ANALOG,
+	LEFT,
+	RIGHT,
 	D_PAD,
 	
 	UNKNOWN

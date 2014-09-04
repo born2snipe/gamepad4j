@@ -4,12 +4,15 @@
 
 package org.gamepad4j.test;
 
+import org.gamepad4j.AxisID;
 import org.gamepad4j.ButtonID;
 import org.gamepad4j.Controllers;
 import org.gamepad4j.DpadDirection;
 import org.gamepad4j.IButton;
 import org.gamepad4j.IController;
+import org.gamepad4j.IStick;
 import org.gamepad4j.ITrigger;
+import org.gamepad4j.StickID;
 import org.gamepad4j.TriggerID;
 
 /**
@@ -55,17 +58,26 @@ public class GamepadCheck implements Runnable {
 					System.out.println("D-Pad: " + dpad);
 				}
 				
-				/*
-				IStick leftStick = controllers[0].getStick(StickID.LEFT_ANALOG);
+				IStick leftStick = controllers[0].getStick(StickID.LEFT);
 				if(leftStick == null) {
 					System.err.println("no left stick found");
 				} else {
-					float xAxis = leftStick.getAxis(AxisID.X).getValue();
-					if(xAxis != 0) {
-						System.out.println("> x Axis of left stick: " + xAxis);
+					/*
+					DpadDirection stickDpad = leftStick.getPosition().getDirection();
+					if(stickDpad !=	DpadDirection.NONE) {
+						System.out.println(">> left stick as d-pad: " + stickDpad);
 					}
+					*/
+					
+					float xAxis = leftStick.getAxis(AxisID.X).getValue();
+					
+					// TODO: Y-AXIS NOT WORKING / DEGREE NOT CORRECT
+					
+					float yAxis = leftStick.getAxis(AxisID.Y).getValue();
+					float degree = leftStick.getPosition().getDegree();
+					float distance = leftStick.getPosition().getDistanceToCenter();
+					System.out.println("> Left stick: X=" + xAxis + ",Y=" + yAxis + ",rotation=" + degree + " / distance: " + distance);
 				}
-				*/
 			}
 			try {
 				Thread.sleep(150);

@@ -65,11 +65,11 @@ public class StickPosition {
 			return DpadDirection.UP_LEFT;
 		} else if(degree > 162.4f || degree < -162.4f) {
 			return DpadDirection.UP;
-		} else if(degree < -27.5f && degree < -72.5f) {
+		} else if(degree < -27.5f && degree > -72.5f) {
 			return DpadDirection.DOWN_RIGHT;
-		} else if(degree < -72.5f && degree < -117.5f) {
+		} else if(degree < -72.5f && degree > -117.5f) {
 			return DpadDirection.RIGHT;
-		} else if(degree < -117.5f && degree < -162.5f) {
+		} else if(degree < -117.5f && degree > -162.5f) {
 			return DpadDirection.UP_RIGHT;
 		}
 		return DpadDirection.NONE;
@@ -87,7 +87,7 @@ public class StickPosition {
 	public float getDegree() {
 		if(!isStickCentered()) {
 	        float degree = (float) Math.toDegrees( Math.atan2(-this.xAxis, this.yAxis) );
-	        return degree;
+	        return degree + 180;
 		}
 		return NO_DEGREE;
 	}
@@ -101,7 +101,7 @@ public class StickPosition {
 	 * 
 	 * @return The disctance from the center.
 	 */
-	public float distanceToCenter() {
+	public float getDistanceToCenter() {
 		return (float) Math.sqrt(this.xAxis * this.xAxis + this.yAxis * this.yAxis);
 	}
 
@@ -112,7 +112,7 @@ public class StickPosition {
 	 * @return True if the stick is centered.
 	 */
     public boolean isStickCentered() {
-        float stickMag = distanceToCenter();
+        float stickMag = getDistanceToCenter();
         return (stickMag < minimumCenterDistance);
     }
 }

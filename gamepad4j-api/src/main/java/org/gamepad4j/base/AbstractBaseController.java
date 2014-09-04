@@ -15,11 +15,10 @@ import org.gamepad4j.IButton;
 import org.gamepad4j.IController;
 import org.gamepad4j.IStick;
 import org.gamepad4j.ITrigger;
-import org.gamepad4j.Mapping;
 import org.gamepad4j.Mapping2;
+import org.gamepad4j.Mapping2.MappingType;
 import org.gamepad4j.StickID;
 import org.gamepad4j.TriggerID;
-import org.gamepad4j.Mapping2.MappingType;
 import org.gamepad4j.util.Log;
 
 /**
@@ -127,6 +126,7 @@ public abstract class AbstractBaseController implements IController {
 			String mapping = Mapping2.getMapping(this, MappingType.BUTTON, buttonNo);
 			if(mapping != null) {
 				ButtonID buttonID = ButtonID.getButtonIDfromString(mapping);
+				Log.log("Map button no. " + buttonNo + " from mapping " + mapping + " to button ID " + buttonID);
 				this.buttons[buttonNo].setID(buttonID);
 				this.buttonMap.put(buttonID, this.buttons[buttonNo]);
 				String label = Mapping2.getButtonLabel(this, buttonID);
@@ -186,9 +186,11 @@ public abstract class AbstractBaseController implements IController {
 		// Cut off the axis type part, like "X"
 		String axisTypePart = mapping.substring(mapping.indexOf(".") + 1);
 		if(axisTypePart.equalsIgnoreCase("X")) {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis X");
 			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_X);
 			this.dpadAxisMap.put(AxisID.D_PAD_X, this.axes[axisNo]);
 		} else {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis Y");
 			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_Y);
 			this.dpadAxisMap.put(AxisID.D_PAD_Y, this.axes[axisNo]);
 		}
@@ -212,8 +214,10 @@ public abstract class AbstractBaseController implements IController {
 			stickMap.put(stickID, stick);
 		}
 		if(axisTypePart.equalsIgnoreCase("X")) {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis X");
 			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.X);
 		} else {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis Y");
 			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.Y);
 		}
 	}
@@ -226,8 +230,8 @@ public abstract class AbstractBaseController implements IController {
 	 */
 	private void processTriggerAxis(String mapping, int axisNo, int triggerNo) {
 		TriggerID mappedID = TriggerID.getTriggerIDfromString(mapping);
-		Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to trigger " + mappedID);
 		if(mappedID != null) {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to trigger " + mappedID);
 			this.axes[axisNo] = new BaseAxis(AxisID.TRIGGER);
 			
 			this.triggers[triggerNo] = new BaseTrigger(this, triggerNo, this.axes[axisNo], "", "");
@@ -397,16 +401,20 @@ public abstract class AbstractBaseController implements IController {
 			}
 		} else {
 			// It's a digital button d-pad
-			if(this.buttonMap.get(ButtonID.D_PAD_UP).isPressed()) {
+			IButton dpadUp = this.buttonMap.get(ButtonID.D_PAD_UP);
+			IButton dpadRight = this.buttonMap.get(ButtonID.D_PAD_RIGHT);
+			IButton dpadDown = this.buttonMap.get(ButtonID.D_PAD_DOWN);
+			IButton dpadLeft = this.buttonMap.get(ButtonID.D_PAD_LEFT);
+			if(dpadUp != null && dpadUp.isPressed()) {
 				value += DpadDirection.UP.getValue();
 			}
-			if(this.buttonMap.get(ButtonID.D_PAD_DOWN).isPressed()) {
+			if(dpadDown != null && dpadDown.isPressed()) {
 				value += DpadDirection.DOWN.getValue();
 			}
-			if(this.buttonMap.get(ButtonID.D_PAD_LEFT).isPressed()) {
+			if(dpadLeft != null && dpadLeft.isPressed()) {
 				value += DpadDirection.LEFT.getValue();
 			}
-			if(this.buttonMap.get(ButtonID.D_PAD_RIGHT).isPressed()) {
+			if(dpadRight != null && dpadRight.isPressed()) {
 				value += DpadDirection.RIGHT.getValue();
 			}
 		}

@@ -30,12 +30,12 @@ public class GamepadJniWrapper {
 	/** 
 	 * Array which temporarily holds controller button state information.
 	 */
-	private static boolean[] buttonArray = new boolean[32];
+	private static boolean[] buttonArray = new boolean[64];
 
 	/** 
 	 * Array which temporarily holds controller axis state information.
 	 */
-	private static float[] axisArray = new float[16];
+	private static float[] axisArray = new float[64];
 
 	/**
 	 * Prepares the native library for usage. This method
@@ -137,15 +137,19 @@ public class GamepadJniWrapper {
 		int numberOfButtons = natGetNumberOfButtons(controller.getIndex());
 		for(int i = 0; i < numberOfButtons; i++) {
 			BaseButton button = (BaseButton)controller.getButton(i);
-			boolean isPressed = natGetControllerButtonState(controller.getIndex(), button.getCode()) == 1;
-			button.setPressed(isPressed);
+			if(button != null) {
+				boolean isPressed = natGetControllerButtonState(controller.getIndex(), button.getCode()) == 1;
+				button.setPressed(isPressed);
+			}
 		}
 		
 		natGetControllerAxesStates(controller.getIndex(), axisArray);
 		BaseAxis[] axes = (BaseAxis[])controller.getAxes();
 		for(int i = 0; i < axes.length; i++) {
-			float axisState = natGetControllerAxisState(controller.getIndex(), i);
-			axes[i].setValue(axisState);
+			if(axes[i] != null) {
+				float axisState = natGetControllerAxisState(controller.getIndex(), i);
+				axes[i].setValue(axisState);
+			}
 		}
 	}
 	

@@ -60,18 +60,18 @@ public class Mapping2 {
 	public static void initializeFromResources() {
 		try {
 			// Read the default text labels
-			InputStream in = Mapping.class.getResourceAsStream("/mappings/default-labels.properties");
+			InputStream in = Mapping2.class.getResourceAsStream("/mappings/default-labels.properties");
 			defaultLabels.load(in);
 			in.close();
 			
 			// Read the mappings for the various pads
-			in = Mapping.class.getResourceAsStream("/mappings/mapping-files.properties");
+			in = Mapping2.class.getResourceAsStream("/mappings/mapping-files.properties");
 			Properties fileListProps = new Properties();
 			fileListProps.load(in);
 			for(Object fileListName : fileListProps.values()) {
 				String propertyFileName = (String)fileListName;
 				Log.log("> processing mapping file: " + propertyFileName);
-				InputStream propIn = Mapping.class.getResourceAsStream(propertyFileName);
+				InputStream propIn = Mapping2.class.getResourceAsStream(propertyFileName);
 				Properties mappingProps = new Properties();
 				mappingProps.load(propIn);
 				
@@ -135,14 +135,18 @@ public class Mapping2 {
 	 * @return The mapping string, or null, if none was found.
 	 */
 	public static String getMapping(IController controller,MappingType type, int value) {
+		Map<Integer, String> idMap = null;
 		if(type == MappingType.BUTTON) {
-			return buttonMapId.get(controller.getDeviceTypeIdentifier()).get(value);
+			idMap = buttonMapId.get(controller.getDeviceTypeIdentifier());
 		} else if(type == MappingType.DPAD_AXIS) {
-			return dpadAxisMapId.get(controller.getDeviceTypeIdentifier()).get(value);
+			idMap = dpadAxisMapId.get(controller.getDeviceTypeIdentifier());
 		} else if(type == MappingType.TRIGGER_AXIS) {
-			return triggerAxisMapId.get(controller.getDeviceTypeIdentifier()).get(value);
+			idMap = triggerAxisMapId.get(controller.getDeviceTypeIdentifier());
 		} else if(type == MappingType.STICK_AXIS) {
-			return stickAxisMapId.get(controller.getDeviceTypeIdentifier()).get(value);
+			idMap = stickAxisMapId.get(controller.getDeviceTypeIdentifier());
+		}
+		if(idMap != null) {
+			return idMap.get(value);
 		}
 		return null;
 	}
@@ -273,7 +277,11 @@ public class Mapping2 {
 	 * @return The number of triggers.
 	 */
 	public static int getNumberOfTriggers(IController controller) {
-		return triggerAxisMapId.get(controller.getDeviceTypeIdentifier()).size();
+		Map<Integer, String> map = triggerAxisMapId.get(controller.getDeviceTypeIdentifier());
+		if(map != null) {
+			return map.size();
+		}
+		return 0;
 	}
 	
 	/**
@@ -284,10 +292,11 @@ public class Mapping2 {
 	 * @return The number of sticks.
 	 */
 	public static int getNumberOfSticks(IController controller) {
-		if(stickAxisMapId == null) {
-			return 0;
+		Map<Integer, String> map = stickAxisMapId.get(controller.getDeviceTypeIdentifier());
+		if(map != null) {
+			return map.size() / 2;
 		}
-		return stickAxisMapId.get(controller.getDeviceTypeIdentifier()).size() / 2;
+		return 0;
 	}
 	
 	/**
@@ -298,7 +307,11 @@ public class Mapping2 {
 	 * @return The default text, or null, if none was defined.
 	 */
 	public static String getButtonLabel(IController controller, ButtonID buttonID) {
-		return defaultButtonLabelMap.get(controller.getDeviceTypeIdentifier()).get(buttonID);
+		Map<ButtonID, String> idMap = defaultButtonLabelMap.get(controller.getDeviceTypeIdentifier());
+		if(idMap != null) {
+			return idMap.get(buttonID);
+		}
+		return null;
 	}
 	
 	/**
@@ -309,7 +322,11 @@ public class Mapping2 {
 	 * @return The resource key, or null, if none was defined.
 	 */
 	public static String getButtonLabelKey(IController controller, ButtonID buttonID) {
-		return buttonLabelKeyMap.get(controller.getDeviceTypeIdentifier()).get(buttonID);
+		Map<ButtonID, String> idMap = buttonLabelKeyMap.get(controller.getDeviceTypeIdentifier());
+		if(idMap != null) {
+			return idMap.get(buttonID);
+		}
+		return null;
 	}
 	
 	/**
@@ -320,7 +337,11 @@ public class Mapping2 {
 	 * @return The default text, or null, if none was defined.
 	 */
 	public static String getTriggerLabel(IController controller, TriggerID triggerID) {
-		return defaultTriggerLabelMap.get(controller.getDeviceTypeIdentifier()).get(triggerID);
+		Map<TriggerID, String> idMap = defaultTriggerLabelMap.get(controller.getDeviceTypeIdentifier());
+		if(idMap != null) {
+			return idMap.get(triggerID);
+		}
+		return null;
 	}
 	
 	/**
@@ -331,7 +352,11 @@ public class Mapping2 {
 	 * @return The resource key, or null, if none was defined.
 	 */
 	public static String getTriggerLabelKey(IController controller, TriggerID triggerID) {
-		return triggerLabelKeyMap.get(controller.getDeviceTypeIdentifier()).get(triggerID);
+		Map<TriggerID, String> idMap = triggerLabelKeyMap.get(controller.getDeviceTypeIdentifier());
+		if(idMap != null) {
+			return idMap.get(triggerID);
+		}
+		return null;
 	}
 	
 	/**
