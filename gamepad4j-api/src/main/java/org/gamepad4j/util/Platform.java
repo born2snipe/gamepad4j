@@ -13,8 +13,8 @@ package org.gamepad4j.util;
 public enum Platform {
 
 	ouya(""),
-	macos(""),
-	windows(""),
+	macos("libgamepad4j.jnilib"),
+	windows("libgamepad4j.dll"),
 	linux("libgamepad4j.so"),
 	unknown("");
 
