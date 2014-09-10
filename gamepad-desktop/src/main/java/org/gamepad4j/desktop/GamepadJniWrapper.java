@@ -118,7 +118,8 @@ public class GamepadJniWrapper {
 				throw new IllegalArgumentException("There must be a native library.");
 			}
 			Log.log("GamepadJniWrapper.loadLibrary(): Trying to load library: " + libraryFile.getCanonicalPath());
-			System.load(libraryFile.getCanonicalPath());
+			System.load(libraryFile.getAbsolutePath());
+//			System.load(libraryFile.getCanonicalPath());
 			Log.log("GamepadJniWrapper.loadLibrary(): Gamepad4j native library successfully loaded.");
 		} catch (Throwable t) {
 			t.printStackTrace();

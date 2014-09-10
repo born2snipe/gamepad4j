@@ -12,6 +12,7 @@ MD %TARGET_32%\tmp
 gcc -m32 -Wall -pthread -c -I %INCLUDE% -I %JDK_INCLUDE% -I %JDK_INCLUDE_WINDOWS% %SRC_SHARED%\Gamepad_private.c -o %TARGET_32%\tmp\Gamepad_private.o
 gcc -m32 -Wall -pthread -c -I %INCLUDE% -I %JDK_INCLUDE% -I %JDK_INCLUDE_WINDOWS% %SRC_SHARED%\GamepadJniWrapper.c -o %TARGET_32%\tmp\GamepadJniWrapper.o
 gcc -m32 -Wall -pthread -c -I %INCLUDE% -I %JDK_INCLUDE% -I %JDK_INCLUDE_WINDOWS% %SRC_WINDOWS%\Gamepad_windows.c -o %TARGET_32%\tmp\Gamepad_windows.o
-gcc -m32 -shared -Wall -Wl,-soname,libgamepad-jni-wrapper.so.1 -o %TARGET_32%\libgamepad4j.dll %TARGET_32%\tmp\*.o -lwinmm 
+rem gcc -m32 -shared -Wall -o %TARGET_32%\libgamepad4j.dll %TARGET_32%\tmp\*.o -lwinmm 
+gcc -m32 -shared -Wall -o %TARGET_32%\libgamepad4j.dll %TARGET_32%\tmp\*.o -lwinmm 
 REM DEL %TARGET_32%\tmp
 
