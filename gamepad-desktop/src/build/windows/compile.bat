@@ -13,6 +13,6 @@ gcc -m32 -Wall -pthread -c -I %INCLUDE% -I %JDK_INCLUDE% -I %JDK_INCLUDE_WINDOWS
 gcc -m32 -Wall -pthread -c -I %INCLUDE% -I %JDK_INCLUDE% -I %JDK_INCLUDE_WINDOWS% %SRC_SHARED%\GamepadJniWrapper.c -o %TARGET_32%\tmp\GamepadJniWrapper.o
 gcc -m32 -Wall -pthread -c -I %INCLUDE% -I %JDK_INCLUDE% -I %JDK_INCLUDE_WINDOWS% %SRC_WINDOWS%\Gamepad_windows.c -o %TARGET_32%\tmp\Gamepad_windows.o
 rem gcc -m32 -shared -Wall -o %TARGET_32%\libgamepad4j.dll %TARGET_32%\tmp\*.o -lwinmm 
-gcc -m32 -shared -Wall -o %TARGET_32%\libgamepad4j.dll %TARGET_32%\tmp\*.o -lwinmm 
+gcc -o %TARGET_32%\libgamepad4j.dll -s -m32 -shared %TARGET_32%\tmp\*.o -Wl,--subsystem,windows -Wl,--add-stdcall-alias  -lwinmm 
 REM DEL %TARGET_32%\tmp
 
