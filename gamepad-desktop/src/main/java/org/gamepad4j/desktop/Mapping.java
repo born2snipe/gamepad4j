@@ -2,7 +2,7 @@
  * @Copyright: Marcel Schoen, Switzerland, 2014, All Rights Reserved.
  */
 
-package org.gamepad4j;
+package org.gamepad4j.desktop;
 
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -10,7 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.gamepad4j.ButtonID;
+import org.gamepad4j.IController;
+import org.gamepad4j.StickID;
+import org.gamepad4j.TriggerID;
 import org.gamepad4j.util.Log;
+import org.gamepad4j.util.PlatformUtil;
 
 /**
  * ...
@@ -18,7 +23,7 @@ import org.gamepad4j.util.Log;
  * @author Marcel Schoen
  * @version $Revision: $
  */
-public class Mapping2 {
+public class Mapping {
 
 	public static enum MappingType {
 		BUTTON,
@@ -54,30 +59,50 @@ public class Mapping2 {
 	/** Stores the label key for each trigger of each device type. */
 	private static Map<Long, Map<TriggerID, String>> triggerLabelKeyMap = new HashMap<Long, Map<TriggerID, String>>();
 
+	/** Lazy label initialization flag. */
+	private static boolean labelsInitialized = false;
+	
 	/**
-	 * Initializes the mappings from the resource properties.
+	 * Loads the mapping for the given controller (if not available yet).
 	 */
-	public static void initializeFromResources() {
+	public static void loadMapping(IController controller) {
 		try {
-			// Read the default text labels
-			InputStream in = Mapping2.class.getResourceAsStream("/mappings/default-labels.properties");
-			defaultLabels.load(in);
-			in.close();
 			
-			// Read the mappings for the various pads
-			in = Mapping2.class.getResourceAsStream("/mappings/mapping-files.properties");
-			Properties fileListProps = new Properties();
-			fileListProps.load(in);
-			for(Object fileListName : fileListProps.values()) {
-				String propertyFileName = (String)fileListName;
-				Log.log("> processing mapping file: " + propertyFileName);
-				InputStream propIn = Mapping2.class.getResourceAsStream(propertyFileName);
-				Properties mappingProps = new Properties();
-				mappingProps.load(propIn);
-				
-				addMappings(mappingProps);
+			if(!labelsInitialized) {
+				// Read the default text labels
+				InputStream in = Mapping.class.getResourceAsStream("/mappings/default-labels.properties");
+				defaultLabels.load(in);
+				in.close();
 			}
-			in.close();
+
+			// Check if mappings already exist for that controller
+			if(defaultButtonLabelMap.get(controller.getDeviceTypeIdentifier()) == null) {
+				// If not, load them now
+				String vendorHex = Integer.toHexString(controller.getVendorID()).toUpperCase();
+				String productHex = Integer.toHexString(controller.getProductID()).toUpperCase();
+				String mappingFileName = "/mappings/" + PlatformUtil.getPlatform().name() + "/"
+						+ "0x" + vendorHex + "-0x" + productHex + "-gamepad4j-mapping.properties";
+				Log.log("Load mapping from resource: " + mappingFileName);
+
+				InputStream propIn = null;
+				try {
+					propIn = Mapping.class.getResourceAsStream(mappingFileName);
+					if(propIn != null) {
+						Properties mappingProps = new Properties();
+						mappingProps.load(propIn);
+						addMappings(mappingProps);
+					} else {
+						Log.log("WARNING: Mapping does not exist: " + mappingFileName);
+					}
+				} finally {
+					try {
+						propIn.close();
+					} catch(Exception ex) {
+						// ignore
+					}
+				}
+			}
+			
 		} catch(Exception ex) {
 			ex.printStackTrace();
 			throw new IllegalStateException("Failed to process mappings from resources: " + ex);
@@ -152,10 +177,11 @@ public class Mapping2 {
 	}
 
 	/**
+	 * Adds a mapping for a certain component of the controller.
 	 * 
-	 * @param type
-	 * @param namePart
-	 * @param value
+	 * @param type The type (button, axis, trigger...)
+	 * @param namePart Name part of property name (name of button, axis etc.)
+	 * @param value The number of the axis or button.
 	 * @param deviceTypeIdentifier
 	 */
 	private static void addMapping(MappingType type, String namePart, String value, long deviceTypeIdentifier) {
@@ -164,9 +190,13 @@ public class Mapping2 {
 			Log.log(">> Add mapping for BUTTON: " + namePart + "=" + value);
 			buttonMap.put(intFromString(value), namePart);
 		} else if(type == MappingType.TRIGGER_AXIS) {
+			
+			
 			Map<Integer, String> triggerMap = getOrCreateMapForDevice(triggerAxisMapId, deviceTypeIdentifier);
 			Log.log(">> Add mapping for TRIGGER: " + namePart + "=" + value);
 			triggerMap.put(intFromString(value), namePart);
+			
+			
 		} else if(type == MappingType.DPAD_AXIS) {
 			Map<Integer, String> dpadMap = getOrCreateMapForDevice(dpadAxisMapId, deviceTypeIdentifier);
 			Log.log(">> Add mapping for DPAD: " + namePart + "=" + value);

@@ -34,9 +34,9 @@ public class GamepadCheck implements Runnable {
 			Controllers.checkControllers();
 			IController[] controllers = Controllers.getControllers();
 			if(controllers != null && controllers.length > 0) {
-				IButton acceptButton = controllers[0].getButton(ButtonID.ACCEPT);
+				IButton acceptButton = controllers[0].getButton(ButtonID.FACE_DOWN);
 				if(acceptButton != null && acceptButton.isPressedOnce()) {
-					System.out.println("*** ACCEPT ***");
+					System.out.println("*** FACE DOWN ***");
 				}
 				IButton cancelButton = controllers[0].getButton(ButtonID.CANCEL);
 				if(cancelButton != null && cancelButton.isPressedOnce()) {
@@ -44,9 +44,7 @@ public class GamepadCheck implements Runnable {
 				}
 				
 				ITrigger triggerLeft = controllers[0].getTrigger(TriggerID.LEFT_DOWN);
-				if(triggerLeft == null) {
-					System.err.println("no left trigger button found");
-				} else {
+				if(triggerLeft != null) {
 					float trigger = triggerLeft.analogValue();
 					if(trigger < -0.2 || trigger > 0.2) {
 						System.out.println("> left trigger button: " + trigger);
@@ -76,8 +74,10 @@ public class GamepadCheck implements Runnable {
 					float yAxis = leftStick.getAxis(AxisID.Y).getValue();
 					float degree = leftStick.getPosition().getDegree();
 					float distance = leftStick.getPosition().getDistanceToCenter();
-					System.out.println("> Left stick: X=" + xAxis + ",Y=" + yAxis + ",rotation=" + degree + " / distance: " + distance);
+					//System.out.println("> Left stick: X=" + xAxis + ",Y=" + yAxis + ",rotation=" + degree + " / distance: " + distance);
 				}
+			} else {
+				System.err.println("No controllers available.");
 			}
 			try {
 				Thread.sleep(150);

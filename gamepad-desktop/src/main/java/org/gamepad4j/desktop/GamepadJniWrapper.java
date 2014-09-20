@@ -141,6 +141,9 @@ public class GamepadJniWrapper {
 			if(button != null) {
 				boolean isPressed = natGetControllerButtonState(controller.getIndex(), button.getCode()) == 1;
 				button.setPressed(isPressed);
+				if(button.getCode() == 0) {
+				System.out.println("Button no. " + i + ": " + isPressed);
+				}
 			}
 		}
 		
@@ -166,14 +169,13 @@ public class GamepadJniWrapper {
 		controller.setDeviceID(idArray[0]);
 		controller.setVendorID(idArray[1]);
 		controller.setProductID(idArray[2]);
+		controller.initializeMapping();
 		
 		int numberOfButtons = natGetNumberOfButtons(controller.getIndex());
 		controller.createButtons(numberOfButtons);
-//		controller.createDigitalButtons(numberOfButtons);
 
 		int numberOfAxes = natGetNumberOfAxes(controller.getIndex());
 		controller.createAxes(numberOfAxes);
-//		controller.createTriggersAndSticks(numberOfAxes);
 	}
 	
 	/**

@@ -4,7 +4,17 @@
 
 package org.gamepad4j.desktop;
 
+import org.gamepad4j.AxisID;
+import org.gamepad4j.ButtonID;
+import org.gamepad4j.StickID;
+import org.gamepad4j.TriggerID;
 import org.gamepad4j.base.AbstractBaseController;
+import org.gamepad4j.base.BaseAxis;
+import org.gamepad4j.base.BaseButton;
+import org.gamepad4j.base.BaseStick;
+import org.gamepad4j.base.BaseTrigger;
+import org.gamepad4j.desktop.Mapping.MappingType;
+import org.gamepad4j.util.Log;
 
 /**
  * Holder for status information about a desktop controller.
@@ -30,6 +40,13 @@ public class DesktopController extends AbstractBaseController {
 		// Real value will be updated later through setter method.
 		super(0);
 		this.index = index;
+	}
+
+	/**
+	 * Initialized the mapping for this controller.
+	 */
+	public void initializeMapping() {
+		Mapping.loadMapping(this);
 	}
 	
 	/**
@@ -62,5 +79,151 @@ public class DesktopController extends AbstractBaseController {
 	 */
 	public void setIndex(int index) {
 		this.index = index;
+	}
+	
+	/**
+	 * Creates the given number of buttons, based on the
+	 * mapping configuration.
+	 * 
+	 * @param numberOfButtons The number of buttons.
+	 */
+	public void createButtons(int numberOfButtons) {
+		Log.log("Create " + numberOfButtons + " buttons for pad...");
+
+		// -----------------------  TODO: Use pooling for button instances ------
+		this.buttons = new BaseButton[numberOfButtons];
+		for(int buttonNo = 0; buttonNo < numberOfButtons; buttonNo++) {
+			this.buttons[buttonNo] = new BaseButton(this, buttonNo, "", "");
+		}
+		// -----------------------------------------------------------------------
+		
+		for(int buttonNo = 0; buttonNo < numberOfButtons; buttonNo++) {
+			String mapping = Mapping.getMapping(this, MappingType.BUTTON, buttonNo);
+			if(mapping != null) {
+				ButtonID buttonID = ButtonID.getButtonIDfromString(mapping);
+				Log.log("Map button no. " + buttonNo + " from mapping " + mapping + " to button ID " + buttonID);
+				this.buttons[buttonNo].setID(buttonID);
+				this.buttonMap.put(buttonID, this.buttons[buttonNo]);
+				String label = Mapping.getButtonLabel(this, buttonID);
+				if(label == null) {
+					label = Mapping.getDefaultButtonLabel(buttonID);
+				}
+				if(label != null) {
+					this.buttons[buttonNo].setDefaultLabel(label);
+				}
+				String labelKey = Mapping.getButtonLabelKey(this, buttonID);
+				if(labelKey != null) {
+					this.buttons[buttonNo].setLabelKey(labelKey);
+				}
+
+			}
+		}
+	}
+
+	/**
+	 * Creates the given number of axes, and then the sticks,
+	 * triggers and d-pad based on the mapping configuration.
+	 * 
+	 * @param numberOfAxes The number of axes.
+	 */
+	public void createAxes(int numberOfAxes) {
+		Log.log("Process " + numberOfAxes + " analog axes...");
+
+		// -----------------------  TODO: Use pooling for these ------
+		this.axes = new BaseAxis[numberOfAxes];
+		this.triggers = new BaseTrigger[Mapping.getNumberOfTriggers(this)];
+		this.sticks = new BaseStick[Mapping.getNumberOfSticks(this)];
+		
+		int triggerNo = 0;
+		for(int axisNo = 0; axisNo < axes.length; axisNo++) {
+			String mapping = Mapping.getMapping(this, Mapping.MappingType.TRIGGER_AXIS, axisNo);
+			if(mapping != null) {
+				processTriggerAxis(mapping, axisNo, triggerNo++);
+			}
+			mapping = Mapping.getMapping(this, Mapping.MappingType.STICK_AXIS, axisNo);
+			if(mapping != null) {
+				processStickAxis(mapping, axisNo);
+			}
+			mapping = Mapping.getMapping(this, Mapping.MappingType.DPAD_AXIS, axisNo);
+			if(mapping != null) {
+				processDpadAxis(mapping, axisNo);
+			}
+		}
+	}
+
+	/**
+	 * Processes D-Pad mappings.
+	 * 
+	 * @param mapping The mapping value.
+	 * @param axisNo The number of the analog axis.
+	 */
+	private void processDpadAxis(String mapping, int axisNo) {
+		// Cut off the axis type part, like "X"
+		String axisTypePart = mapping.substring(mapping.indexOf(".") + 1);
+		if(axisTypePart.equalsIgnoreCase("X")) {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis X");
+			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_X);
+			this.dpadAxisMap.put(AxisID.D_PAD_X, this.axes[axisNo]);
+		} else {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis Y");
+			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_Y);
+			this.dpadAxisMap.put(AxisID.D_PAD_Y, this.axes[axisNo]);
+		}
+	}
+	
+	/**
+	 * Processes stick mappings.
+	 * 
+	 * @param mapping The mapping value.
+	 * @param axisNo The number of the analog axis.
+	 */
+	private void processStickAxis(String mapping, int axisNo) {
+		// Cut off the ID part, like "LEFT"
+		String stickIDpart = mapping.substring(0, mapping.indexOf("."));
+		// Cut off the axis type part, like "X"
+		String axisTypePart = mapping.substring(mapping.indexOf(".") + 1);
+		StickID stickID = StickID.getStickIDfromString(stickIDpart);
+		BaseStick stick = (BaseStick)stickMap.get(stickID);
+		if(stick == null) {
+			stick = new BaseStick(stickID);
+			stickMap.put(stickID, stick);
+		}
+		if(axisTypePart.equalsIgnoreCase("X")) {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis X");
+			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.X);
+		} else {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis Y");
+			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.Y);
+		}
+	}
+	
+	/**
+	 * Processes trigger mappings.
+	 * 
+	 * @param mapping The mapping value.
+	 * @param axisNo The number of the analog axis.
+	 */
+	private void processTriggerAxis(String mapping, int axisNo, int triggerNo) {
+		TriggerID mappedID = TriggerID.getTriggerIDfromString(mapping);
+		if(mappedID != null) {
+			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to trigger " + mappedID);
+			this.axes[axisNo] = new BaseAxis(AxisID.TRIGGER);
+			
+			this.triggers[triggerNo] = new BaseTrigger(this, triggerNo, this.axes[axisNo], "", "");
+			this.triggers[triggerNo].setID(mappedID);
+			
+			this.triggerMap.put(mappedID, this.triggers[triggerNo]);
+			String label = Mapping.getTriggerLabel(this, mappedID);
+			if(label == null) {
+				label = Mapping.getDefaultTriggerLabel(mappedID);
+			}
+			if(label != null) {
+				this.triggers[triggerNo].setDefaultLabel(label);
+			}
+			String labelKey = Mapping.getTriggerLabelKey(this, mappedID);
+			if(labelKey != null) {
+				this.triggers[triggerNo].setLabelKey(labelKey);
+			}
+		}
 	}
 }

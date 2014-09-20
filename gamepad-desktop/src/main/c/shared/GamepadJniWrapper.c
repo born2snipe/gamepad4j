@@ -201,6 +201,7 @@ JNIEXPORT void JNICALL Java_org_gamepad4j_desktop_GamepadJniWrapper_natGetContro
 
 	struct Gamepad_device * device = Gamepad_deviceAtIndex(gamepadIndex);
 	if(device == NULL) {
+		printf("ERROR: Can't update axes of device!\n");
 		return;
 	}
 
@@ -223,9 +224,14 @@ JNIEXPORT jfloat JNICALL Java_org_gamepad4j_desktop_GamepadJniWrapper_natGetCont
 {
 	struct Gamepad_device * device = Gamepad_deviceAtIndex(gamepadIndex);
 	if(device == NULL) {
+		printf("ERROR: Can't update axis of device!\n");
 		return -1;
 	}
-	return device->axisStates[axisIndex];
+	float result = device->axisStates[axisIndex];
+	if(axisIndex == 0) {
+		printf("Axis 0: %f\n", result);
+	}
+	return result;
 }
 
 

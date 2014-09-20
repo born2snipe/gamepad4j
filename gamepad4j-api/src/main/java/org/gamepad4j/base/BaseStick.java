@@ -40,7 +40,7 @@ public class BaseStick implements IStick {
 	 * 
 	 * @param deviceID The deviceID of this stick.
 	 */
-	protected BaseStick(StickID ID) {
+	public BaseStick(StickID ID) {
 		this.ID = ID;
 		this.axes[0] = this.xAxis;
 		this.axes[1] = this.yAxis;
