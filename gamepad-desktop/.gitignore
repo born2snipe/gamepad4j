@@ -1,1 +1,8 @@
 /original-files
+/assets
+/bin
+/target
+/build
+.settings
+.settings
+.gradle

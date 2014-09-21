@@ -1,4 +1,7 @@
 /assets
 /bin
 /target
+/build
 .settings
+.settings
+.gradle
