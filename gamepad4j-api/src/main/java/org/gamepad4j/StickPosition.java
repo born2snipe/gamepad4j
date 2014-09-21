@@ -23,7 +23,7 @@ public class StickPosition {
 	public float yAxis = -1;
 	
 	/** Constant for marker value indicating no degree has been measured. */
-	public static final float NO_DEGREE = -9999f;
+	public static final float NO_DEGREE = -1f;
 
 	/** Minimum distance from center for stick to not be centered. */
 	private static final float minimumCenterDistance = 0.2f;

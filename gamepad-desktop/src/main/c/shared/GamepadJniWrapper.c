@@ -230,9 +230,6 @@ JNIEXPORT jfloat JNICALL Java_org_gamepad4j_desktop_GamepadJniWrapper_natGetCont
 		return -1;
 	}
 	float result = device->axisStates[axisIndex];
-	if(axisIndex == 0) {
-		printf("Axis 0: %f\n", result);
-	}
 	return result;
 }
 

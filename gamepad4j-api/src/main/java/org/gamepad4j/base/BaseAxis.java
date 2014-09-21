@@ -20,6 +20,10 @@ public class BaseAxis implements IAxis {
 	
 	/** Stores the float value of this axis. */
 	private float value = 0f;
+
+	/** Default deadzone range. */
+	private float deadZone = 0.1f;
+	private float deadZoneNegative = -this.deadZone;
 	
 	/**
 	 * Creates a new base axis instance.
@@ -44,9 +48,24 @@ public class BaseAxis implements IAxis {
 	 */
 	@Override
 	public float getValue() {
+		// Check if value is inside deadzone
+		if(this.value > this.deadZoneNegative && this.value < this.deadZone) {
+			// If yes, signal nothing.
+			return 0f;
+		}
 		return this.value;
 	}
 
+	/**
+	 * Sets the deadzone range for this axis.
+	 * 
+	 * @param deadZone The deadzone range value.
+	 */
+	protected void setDeadZone(float deadZone) {
+		this.deadZone = deadZone;
+		this.deadZoneNegative = -this.deadZone;
+	}
+	
 	/**
 	 * Sets the float value of this axis.
 	 * 
