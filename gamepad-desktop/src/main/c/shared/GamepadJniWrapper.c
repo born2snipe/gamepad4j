@@ -106,6 +106,8 @@ JNIEXPORT jint JNICALL Java_org_gamepad4j_desktop_GamepadJniWrapper_natGetIdOfPa
 JNIEXPORT void JNICALL Java_org_gamepad4j_desktop_GamepadJniWrapper_natDetectPads
 (JNIEnv *env, jobject obj) {
 	Gamepad_detectDevices();
+	// The following call is required on Windows
+	Gamepad_processEvents();
 	return;
 }
 
