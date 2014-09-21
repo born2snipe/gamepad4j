@@ -17,6 +17,16 @@ import org.gamepad4j.TriggerID;
  */
 public class BaseTrigger implements ITrigger {
 
+	/** Constants for axis value range of trigger. */
+	public static enum ValueRange {
+		ALL,
+		POSITIVE_ONLY,
+		NEGATIVE_ONLY
+	};
+	
+	/** Stores the value range supported by this trigger. */
+	private ValueRange valueRange = ValueRange.ALL;
+	
 	/** Stores the axis for a trigger trigger. */
 	private IAxis axis = null;
 
@@ -51,6 +61,24 @@ public class BaseTrigger implements ITrigger {
 		this.labelKey = labelKey;
 	}
 
+	/**
+	 * Sets the value range for this trigger.
+	 * 
+	 * @return The value range supported by this trigger.
+	 */
+	public ValueRange getValueRange() {
+		return valueRange;
+	}
+
+	/**
+	 * Sets the value range for this trigger.
+	 * 
+	 * @param valueRange The value range supported by this trigger.
+	 */
+	public void setValueRange(ValueRange valueRange) {
+		this.valueRange = valueRange;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.gamepad4j.util.IButton#getID()
 	 */
@@ -82,7 +110,15 @@ public class BaseTrigger implements ITrigger {
 	 */
 	@Override
 	public float analogValue() {
-		return this.axis.getValue();
+		float value = this.axis.getValue();
+		if(this.valueRange == ValueRange.ALL) {
+			return value;
+		} else if(this.valueRange == ValueRange.NEGATIVE_ONLY && value <= 0f) {
+			return value;
+		} else if(this.valueRange == ValueRange.POSITIVE_ONLY && value >= 0f) {
+			return value;
+		}
+		return 0f;
 	}
 
 	/* (non-Javadoc)
