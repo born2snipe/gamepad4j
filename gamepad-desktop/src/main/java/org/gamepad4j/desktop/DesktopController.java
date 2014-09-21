@@ -163,6 +163,11 @@ public class DesktopController extends AbstractBaseController {
 				processDpadAxis(mapping, axisNo);
 			}
 		}
+		
+		// TODO:
+		// Windows-specific: Triggers can use non-existent axis, so
+		// check for them in the mapping (but currently the JNI library
+		// does not support that)
 	}
 
 	/**

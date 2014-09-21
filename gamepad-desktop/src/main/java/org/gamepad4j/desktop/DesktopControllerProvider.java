@@ -100,6 +100,12 @@ public class DesktopControllerProvider implements IControllerProvider {
 			controller.setChecked(false);
 		}
 		
+		
+		
+		float value = jniWrapper.natGetControllerAxisState(0, 8);
+		System.err.println(">> Axis 8: " + value);
+		
+		
 		// 1st check which controllers are (still) connected
 		int newNumberOfControllers = jniWrapper.natGetNumberOfPads();
 		if(newNumberOfControllers != this.numberOfControllers) {

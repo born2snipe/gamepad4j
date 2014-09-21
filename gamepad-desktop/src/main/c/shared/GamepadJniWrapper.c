@@ -229,6 +229,7 @@ JNIEXPORT jfloat JNICALL Java_org_gamepad4j_desktop_GamepadJniWrapper_natGetCont
 		printf("ERROR: Can't update axis of device!\n");
 		return -1;
 	}
+	// TODO: Bounds check for "axisIndex" variable
 	float result = device->axisStates[axisIndex];
 	return result;
 }

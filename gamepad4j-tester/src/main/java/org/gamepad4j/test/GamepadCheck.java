@@ -46,6 +46,7 @@ public class GamepadCheck implements Runnable {
 				ITrigger triggerLeft = controllers[0].getTrigger(TriggerID.LEFT_DOWN);
 				if(triggerLeft != null) {
 					float trigger = triggerLeft.analogValue();
+					System.out.println("> left trigger button: " + trigger);
 					if(trigger < -0.2 || trigger > 0.2) {
 						System.out.println("> left trigger button: " + trigger);
 					}
@@ -74,7 +75,7 @@ public class GamepadCheck implements Runnable {
 					float yAxis = leftStick.getAxis(AxisID.Y).getValue();
 					float degree = leftStick.getPosition().getDegree();
 					float distance = leftStick.getPosition().getDistanceToCenter();
-					System.out.println("> Left stick: X=" + xAxis + ",Y=" + yAxis + ",rotation=" + degree + " / distance: " + distance);
+//					System.out.println("> Left stick: X=" + xAxis + ",Y=" + yAxis + ",rotation=" + degree + " / distance: " + distance);
 				}
 			} else {
 				System.err.println("No controllers available.");
