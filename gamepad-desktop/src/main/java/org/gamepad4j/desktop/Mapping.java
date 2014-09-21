@@ -65,7 +65,7 @@ public class Mapping {
 	/**
 	 * Loads the mapping for the given controller (if not available yet).
 	 */
-	public static void loadMapping(IController controller) {
+	public static void loadMapping(DesktopController controller) {
 		try {
 			
 			if(!labelsInitialized) {
@@ -74,7 +74,7 @@ public class Mapping {
 				defaultLabels.load(in);
 				in.close();
 			}
-
+			
 			// Check if mappings already exist for that controller
 			if(defaultButtonLabelMap.get(controller.getDeviceTypeIdentifier()) == null) {
 				// If not, load them now
@@ -91,6 +91,11 @@ public class Mapping {
 						Properties mappingProps = new Properties();
 						mappingProps.load(propIn);
 						addMappings(mappingProps);
+						
+						if(mappingProps.getProperty("deadzone") != null) {
+							float deadZone = floatFromString(mappingProps.getProperty("deadzone"));
+							controller.setDefaultDeadZone(deadZone);
+						}
 					} else {
 						Log.log("WARNING: Mapping does not exist: " + mappingFileName);
 					}
@@ -205,6 +210,21 @@ public class Mapping {
 			Map<Integer, String> stickMap = getOrCreateMapForDevice(stickAxisMapId, deviceTypeIdentifier);
 			Log.log(">> Add mapping for STICK: " + namePart + "=" + value);
 			stickMap.put(intFromString(value), namePart);
+		}
+	}
+
+	/**
+	 * Converts a string value to a Float.
+	 * 
+	 * @param value The string value.
+	 * @return The Float.
+	 * @throws IllegalArgumentException If the given string was not a numerical value.
+	 */
+	private static Float floatFromString(String value) {
+		try {
+			return Float.parseFloat(value);
+		} catch(NumberFormatException ex) {
+			throw new IllegalArgumentException("Not a valid numeric value: " + value);
 		}
 	}
 

@@ -24,11 +24,17 @@ import org.gamepad4j.util.Log;
  */
 public class DesktopController extends AbstractBaseController {
 
+	/** Default deadzone value for desktop controller axes. */
+	public static final float DEFAULT_DEADZONE = 0.1f;
+	
 	/** Stores the controller code value. */
 	private int index = -1;
 	
 	/** Flag for tracking check status. */
 	private boolean checked = false;
+	
+	/** Default deadzone value. */
+	private float defaultDeadZone = DEFAULT_DEADZONE;
 
 	/**
 	 * Creates a desktop controller holder for a certain code.
@@ -47,6 +53,14 @@ public class DesktopController extends AbstractBaseController {
 	 */
 	public void initializeMapping() {
 		Mapping.loadMapping(this);
+	}
+	
+	/**
+	 * 
+	 * @param deadZone
+	 */
+	public void setDefaultDeadZone(float deadZone) {
+		this.defaultDeadZone = deadZone;
 	}
 	
 	/**
@@ -195,6 +209,7 @@ public class DesktopController extends AbstractBaseController {
 			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis Y");
 			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.Y);
 		}
+		this.axes[axisNo].setDeadZone(this.defaultDeadZone);
 	}
 	
 	/**

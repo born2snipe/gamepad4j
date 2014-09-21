@@ -61,7 +61,7 @@ public class BaseAxis implements IAxis {
 	 * 
 	 * @param deadZone The deadzone range value.
 	 */
-	protected void setDeadZone(float deadZone) {
+	public void setDeadZone(float deadZone) {
 		this.deadZone = deadZone;
 		this.deadZoneNegative = -this.deadZone;
 	}
