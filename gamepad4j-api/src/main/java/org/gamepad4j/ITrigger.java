@@ -42,6 +42,15 @@ public interface ITrigger {
 	float analogValue();
 	
 	/**
+	 * Returns the percentage of how strong this trigger is
+	 * being pressed. At 0, it's not pressed at all, at 100
+	 * percent it being fully pressed.
+	 * 
+	 * @return The percentage of the trigger pressure.
+	 */
+	int getPercentage();
+	
+	/**
 	 * Returns the name of the message resource key which holds
 	 * the text label for this trigger (which might be something
 	 * like "Triangle" for the upper face button on a PS3 DualShock 3 pad).

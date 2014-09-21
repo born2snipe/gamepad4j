@@ -61,6 +61,18 @@ public class BaseTrigger implements ITrigger {
 		this.labelKey = labelKey;
 	}
 
+	@Override
+	public int getPercentage() {
+		if(this.valueRange == ValueRange.ALL) {
+			return ((int)(this.axis.getValue() + 1.0f) * 50);
+		} else if(this.valueRange == ValueRange.NEGATIVE_ONLY) {
+			return ((int)(this.axis.getValue() + 1.0f) * 100);
+		} else if(this.valueRange == ValueRange.POSITIVE_ONLY) {
+			return (int)(this.axis.getValue() * 100);
+		}
+		return 0;
+	}
+
 	/**
 	 * Sets the value range for this trigger.
 	 * 
