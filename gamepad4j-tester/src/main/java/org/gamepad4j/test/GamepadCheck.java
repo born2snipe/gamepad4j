@@ -74,7 +74,7 @@ public class GamepadCheck implements Runnable {
 					float yAxis = leftStick.getAxis(AxisID.Y).getValue();
 					float degree = leftStick.getPosition().getDegree();
 					float distance = leftStick.getPosition().getDistanceToCenter();
-					//System.out.println("> Left stick: X=" + xAxis + ",Y=" + yAxis + ",rotation=" + degree + " / distance: " + distance);
+					System.out.println("> Left stick: X=" + xAxis + ",Y=" + yAxis + ",rotation=" + degree + " / distance: " + distance);
 				}
 			} else {
 				System.err.println("No controllers available.");

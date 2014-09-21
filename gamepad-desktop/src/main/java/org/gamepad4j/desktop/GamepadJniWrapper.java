@@ -142,7 +142,7 @@ public class GamepadJniWrapper {
 				boolean isPressed = natGetControllerButtonState(controller.getIndex(), button.getCode()) == 1;
 				button.setPressed(isPressed);
 				if(button.getCode() == 0) {
-				System.out.println("Button no. " + i + ": " + isPressed);
+//				System.out.println("Button no. " + i + ": " + isPressed);
 				}
 			}
 		}
