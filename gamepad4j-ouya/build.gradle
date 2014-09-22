@@ -1,6 +1,17 @@
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 
+// REQUIRES ENVIRONMENT VARIABLE 'ODK' WHICH
+// POINTS TO THE OUYA SDK DIRECTORY
+
+ODK = "$System.env.ODK".trim();
+println(">> Path of OUYA SDK: " + ODK);
+
+if(ODK == null || ODK.equals("null") ||  ODK.trim().length() == 0) {
+    throw new GradleException("*** Missing/invalid environment variable ODK (path of OUYA SDK) ***");
+}
+
 dependencies {
     compile project(':gamepad4j-api')
+    compile fileTree(dir: ODK + '/libs', include: '*.jar')
 }
