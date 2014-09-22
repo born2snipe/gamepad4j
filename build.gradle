@@ -1,9 +1,25 @@
+// REQUIRES ENVIRONMENT VARIABLE 'ODK' WHICH
+// POINTS TO THE OUYA SDK DIRECTORY
+
+ODK = "$System.env.ODK".trim();
+println(">> Path of OUYA SDK: " + ODK);
+
+if(ODK == null || ODK.equals("null") ||  ODK.trim().length() == 0) {
+    throw new GradleException("*** Missing/invalid environment variable ODK (path of OUYA SDK) ***");
+}
+
 subprojects {
   apply plugin: "java"
 
   group = theGroup
   version = theVersion
   sourceCompatibility = theSourceCompatibility
+
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+
 }
 
 

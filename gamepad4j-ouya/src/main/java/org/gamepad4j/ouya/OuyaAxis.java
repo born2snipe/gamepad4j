@@ -42,13 +42,13 @@ public class OuyaAxis implements IAxis {
 		this.id = id;
 		this.stick = stick;
 		this.controller = controller;
-		if(this.stick.getID() == StickID.LEFT_ANALOG) {
+		if(this.stick.getID() == StickID.LEFT) {
 			if(id == AxisID.X) {
 				this.ouyaAxisId = OuyaController.AXIS_LS_X;
 			} else {
 				this.ouyaAxisId = OuyaController.AXIS_LS_Y;
 			}
-		} else if(this.stick.getID() == StickID.RIGHT_ANALOG) {
+		} else if(this.stick.getID() == StickID.RIGHT) {
 			if(id == AxisID.X) {
 				this.ouyaAxisId = OuyaController.AXIS_RS_X;
 			} else {

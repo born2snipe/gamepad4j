@@ -37,9 +37,9 @@ public class OuyaControllerTrigger extends BaseTrigger {
 	public OuyaControllerTrigger(IController controller, TriggerID id, String label, String labelKey, OuyaController wrappedController) {
 		super(controller, 0, null, label, labelKey);
 		this.controller = wrappedController;
-		if(id ==  TriggerID.TRIGGER_LEFT_DOWN) {
+		if(id ==  TriggerID.LEFT_DOWN) {
 			this.code = OuyaController.AXIS_L2;
-		} else if(id == TriggerID.TRIGGER_RIGHT_DOWN) {
+		} else if(id == TriggerID.RIGHT_DOWN) {
 			this.code = OuyaController.AXIS_R2;
 		}
 	}

@@ -55,8 +55,8 @@ public class OuyaControllerWrapper extends AbstractBaseController {
 	public OuyaControllerWrapper(OuyaController wrapped) {
 		super(wrapped.getDeviceId());
 		this.wrappedController = wrapped;
-		this.sticks[LEFT_STICK] = new OuyaControllerStick(StickID.LEFT_ANALOG, wrapped);
-		this.sticks[RIGHT_STICK] = new OuyaControllerStick(StickID.RIGHT_ANALOG, wrapped);
+		this.sticks[LEFT_STICK] = new OuyaControllerStick(StickID.LEFT, wrapped);
+		this.sticks[RIGHT_STICK] = new OuyaControllerStick(StickID.RIGHT, wrapped);
 		
 		addButton(new OuyaControllerButton(this, ButtonID.ACCEPT, "O", "jplay.ouya.button.O", this.wrappedController));
 		addButton(new OuyaControllerButton(this, ButtonID.BACK, "A", "jplay.ouya.button.A", this.wrappedController));
@@ -98,9 +98,9 @@ public class OuyaControllerWrapper extends AbstractBaseController {
 	 */
 	@Override
 	public IStick getStick(StickID stick) throws IllegalArgumentException {
-		if(stick == StickID.LEFT_ANALOG) {
+		if(stick == StickID.LEFT) {
 			return this.sticks[LEFT_STICK];
-		} else if(stick == StickID.RIGHT_ANALOG) {
+		} else if(stick == StickID.RIGHT) {
 			return this.sticks[RIGHT_STICK];
 		}
 		throw new IllegalArgumentException("Stick '" + stick.name() + "' not supported by OUYA controller.");
