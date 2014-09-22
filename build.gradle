@@ -1,0 +1,9 @@
+subprojects {
+  apply plugin: "java"
+
+  group = theGroup
+  version = theVersion
+  sourceCompatibility = theSourceCompatibility
+}
+
+

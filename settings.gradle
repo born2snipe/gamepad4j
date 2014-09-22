@@ -1,0 +1,3 @@
+rootProject.name = theName
+
+include 'gamepad4j-api', 'gamepad4j-desktop', 'gamepad4j-ouya', 'gamepad4j-uberjar', 'gamepad4j-tester'
