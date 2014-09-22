@@ -3,13 +3,7 @@ jar {
 	dependsOn configurations.runtime
 	from {
 	    (configurations.runtime - configurations.provided).collect {
-	        if(it.getName().startsWith("gamepad4j")) {
-	            if(it.isDirectory()) {
-	                it;
-	            } else {
-	                zipTree(it);
-	            }
-	        }
+	        it.isDirectory() ? it : zipTree(it);
 	    }
 	}
 }
