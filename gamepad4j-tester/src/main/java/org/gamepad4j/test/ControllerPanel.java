@@ -31,6 +31,8 @@ public class ControllerPanel extends JPanel {
 	    }
 	    JLabel label = new JLabel(padImage, JLabel.CENTER);
 	    add(label);
+	    
+	    
 	}
 
 }
