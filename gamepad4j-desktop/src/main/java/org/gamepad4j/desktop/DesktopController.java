@@ -102,7 +102,9 @@ public class DesktopController extends AbstractBaseController {
 	 * @param numberOfButtons The number of buttons.
 	 */
 	public void createButtons(int numberOfButtons) {
-		Log.log("Create " + numberOfButtons + " buttons for pad...");
+		if(Log.debugEnabled) {
+			Log.logger.debug("Create " + numberOfButtons + " buttons for pad...");
+		}
 
 		// -----------------------  TODO: Use pooling for button instances ------
 		this.buttons = new BaseButton[numberOfButtons];
@@ -115,7 +117,9 @@ public class DesktopController extends AbstractBaseController {
 			String mapping = Mapping.getMapping(this, MappingType.BUTTON, buttonNo);
 			if(mapping != null) {
 				ButtonID buttonID = ButtonID.getButtonIDfromString(mapping);
-				Log.log("Map button no. " + buttonNo + " from mapping " + mapping + " to button ID " + buttonID);
+				if(Log.debugEnabled) {
+					Log.logger.debug("Map button no. " + buttonNo + " from mapping " + mapping + " to button ID " + buttonID);
+				}
 				this.buttons[buttonNo].setID(buttonID);
 				this.buttonMap.put(buttonID, this.buttons[buttonNo]);
 				String label = Mapping.getButtonLabel(this, buttonID);
@@ -141,7 +145,9 @@ public class DesktopController extends AbstractBaseController {
 	 * @param numberOfAxes The number of axes.
 	 */
 	public void createAxes(int numberOfAxes) {
-		Log.log("Process " + numberOfAxes + " analog axes...");
+		if(Log.debugEnabled) {
+			Log.logger.debug("Process " + numberOfAxes + " analog axes...");
+		}
 
 		// -----------------------  TODO: Use pooling for these ------
 		this.axes = new BaseAxis[numberOfAxes];
@@ -180,11 +186,15 @@ public class DesktopController extends AbstractBaseController {
 		// Cut off the axis type part, like "X"
 		String axisTypePart = mapping.substring(mapping.indexOf(".") + 1);
 		if(axisTypePart.equalsIgnoreCase("X")) {
-			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis X");
+			if(Log.debugEnabled) {
+				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis X");
+			}
 			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_X);
 			this.dpadAxisMap.put(AxisID.D_PAD_X, this.axes[axisNo]);
 		} else {
-			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis Y");
+			if(Log.debugEnabled) {
+				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis Y");
+			}
 			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_Y);
 			this.dpadAxisMap.put(AxisID.D_PAD_Y, this.axes[axisNo]);
 		}
@@ -208,10 +218,14 @@ public class DesktopController extends AbstractBaseController {
 			stickMap.put(stickID, stick);
 		}
 		if(axisTypePart.equalsIgnoreCase("X")) {
-			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis X");
+			if(Log.debugEnabled) {
+				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis X");
+			}
 			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.X);
 		} else {
-			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis Y");
+			if(Log.debugEnabled) {
+				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis Y");
+			}
 			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.Y);
 		}
 		this.axes[axisNo].setDeadZone(this.defaultDeadZone);
@@ -226,7 +240,9 @@ public class DesktopController extends AbstractBaseController {
 	private void processTriggerAxis(String mapping, int axisNo, int triggerNo) {
 		TriggerID mappedID = TriggerID.getTriggerIDfromString(mapping);
 		if(mappedID != null) {
-			Log.log("Map axis no. " + axisNo + " from mapping " + mapping + " to trigger " + mappedID);
+			if(Log.debugEnabled) {
+				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to trigger " + mappedID);
+			}
 			this.axes[axisNo] = new BaseAxis(AxisID.TRIGGER);
 			
 			this.triggers[triggerNo] = new BaseTrigger(this, triggerNo, this.axes[axisNo], "", "");

@@ -166,7 +166,9 @@ public abstract class AbstractBaseController implements IController {
 	 * @param vendorID the vendorID to set
 	 */
 	public void setVendorID(int vendorID) {
-		Log.log("Set controller vendor ID: " + Integer.toHexString(vendorID));
+		if(Log.debugEnabled) {
+			Log.logger.debug("Set controller vendor ID: " + Integer.toHexString(vendorID));
+		}
 		this.vendorID = vendorID;
 	}
 
@@ -183,7 +185,9 @@ public abstract class AbstractBaseController implements IController {
 	 * @param productID the productID to set
 	 */
 	public void setProductID(int productID) {
-		Log.log("Set controller product ID: " + Integer.toHexString(productID));
+		if(Log.debugEnabled) {
+			Log.logger.debug("Set controller product ID: " + Integer.toHexString(productID));
+		}
 		this.productID = productID;
 	}
 	
