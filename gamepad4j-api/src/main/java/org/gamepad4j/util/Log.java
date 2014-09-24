@@ -4,6 +4,8 @@
 
 package org.gamepad4j.util;
 
+import org.gamepad4j.ILog;
+
 /**
  * Logging utility class.
  *
