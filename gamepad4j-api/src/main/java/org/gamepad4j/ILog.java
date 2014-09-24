@@ -2,7 +2,9 @@
  * @Copyright: Marcel Schoen, Switzerland, 2014, All Rights Reserved.
  */
 
-package org.gamepad4j.util;
+package org.gamepad4j;
+
+import org.gamepad4j.util.Log;
 
 /**
  * Interface for logger implementations. This way, any application using
