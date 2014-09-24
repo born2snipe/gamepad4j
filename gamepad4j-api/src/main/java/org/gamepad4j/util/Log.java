@@ -47,7 +47,7 @@ public class Log implements ILog {
 	 */
 	@Override
 	public void debug(String message) {
-		System.err.println("[Gamepad4J] [DEBUG] " + message);
+		System.out.println("[Gamepad4J] [DEBUG] " + message);
 	}
 
 	/* (non-Javadoc)
