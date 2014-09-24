@@ -5,8 +5,8 @@
 	<classpathentry kind="var" path="OUYA_LIBS/commons-lang-2.6.jar"/>
 	<classpathentry kind="var" path="OUYA_LIBS/guava-r09.jar"/>
 	<classpathentry kind="var" path="OUYA_LIBS/ouya-sdk.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/gamepad4j"/>
 	<classpathentry kind="var" path="LIBGDX_LIBS/gdx.jar"/>
 	<classpathentry kind="var" path="LIBGDX_LIBS/gdx-backend-android.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/gamepad4j-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
