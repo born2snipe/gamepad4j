@@ -110,7 +110,9 @@ public class DesktopControllerProvider implements IControllerProvider {
 		int newNumberOfControllers = jniWrapper.natGetNumberOfPads();
 		if(newNumberOfControllers != this.numberOfControllers) {
 			this.numberOfControllers = newNumberOfControllers;
-			Log.log("Number of controllers: " + this.numberOfControllers);
+			if(Log.debugEnabled) {
+				Log.logger.debug("Number of controllers: " + this.numberOfControllers);
+			}
 		}
 //		Log.log("Check for newly connected controllers...");
 		for(int ct = 0; ct < this.numberOfControllers; ct++) {
@@ -126,13 +128,15 @@ public class DesktopControllerProvider implements IControllerProvider {
 					}
 					newController.setChecked(true);
 					jniWrapper.updateControllerInfo(newController);
-					this.connected.put(newController.getDeviceID(), newController);
-					Log.log("***********************************************************************");
-					Log.log("Newly connected controller found: " + newController.getDeviceID()
+					DesktopControllerProvider.connected.put(newController.getDeviceID(), newController);
+					if(Log.infoEnabled) {
+						Log.logger.info("***********************************************************************");
+						Log.logger.info("Newly connected controller found: " + newController.getDeviceID()
 							+ " (" + Integer.toHexString(newController.getVendorID()) + "/"
 							+ Integer.toHexString(newController.getProductID()) 
 							+ ") / " + newController.getDescription());
-					Log.log("***********************************************************************");
+						Log.logger.info("***********************************************************************");
+					}
 					listeners.getListeners().get(0).connected(newController);
 				}
 			}
@@ -145,7 +149,9 @@ public class DesktopControllerProvider implements IControllerProvider {
 			Entry<Integer, DesktopController> entry = iter.next();
 			DesktopController controller = entry.getValue();
 			if(!controller.isChecked()) {
-				Log.log("Controller disconnected: " + controller.getDeviceID() + " / " + controller.getDescription());
+				if(Log.infoEnabled) {
+					Log.logger.info("Controller disconnected: " + controller.getDeviceID() + " / " + controller.getDescription());
+				}
 				listeners.getListeners().get(0).disConnected(controller);
 				returnInstanceToPool(controller);
 				// Must be removed from map with iterator, otherwise

@@ -50,14 +50,20 @@ public class PlatformUtil {
 	public static boolean isOuya() {
 		if(isOuya == null) {
 			try {
-				Log.log("Create class 'android.os.Build'");
+				if(Log.debugEnabled) {
+					Log.logger.debug("Create class 'android.os.Build'");
+				}
 				Class<?> buildClass = Class.forName("android.os.Build");
 				Field deviceField = buildClass.getDeclaredField("DEVICE");
 				Object device = deviceField.get(null);
-				Log.log("Device Type: '" + device + "'");
+				if(Log.debugEnabled) {
+					Log.logger.debug("Device Type: '" + device + "'");
+				}
 				String deviceName = device.toString().trim().toLowerCase();
 				isOuya = new Boolean(deviceName.indexOf("ouya") != -1);
-				Log.log("is OUYA: " + isOuya);
+				if(Log.debugEnabled) {
+					Log.logger.debug("is OUYA: " + isOuya);
+				}
 			} catch(Exception e) {
 				return false;
 			}

@@ -33,6 +33,12 @@ public class Controllers implements IControllerListener {
 	 * before the controllers can be used.
 	 */
 	public static void initialize() {
+		// By default, do not log at all.
+		// In order to override this, the caller can
+		// invoke "Log.initialize()" beforehand with
+		// the desired log level.
+		Log.initialize(Log.LogLevel.NONE);
+		
 		String providerType = "Desktop";
 		if(PlatformUtil.isOuya()) {
 			providerType = "Ouya";
@@ -45,7 +51,7 @@ public class Controllers implements IControllerListener {
 			controllerProvider = (IControllerProvider)providerClass.newInstance();
 			controllerProvider.addListener(instance);
 			controllerProvider.initialize();
-			Log.log("Controller provider ready: " + controllerProvider.getClass().getName());
+			Log.logger.debug("Controller provider ready: " + controllerProvider.getClass().getName());
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new IllegalStateException("Failed to initialize controller provider instance: " + e);

@@ -26,6 +26,7 @@ import org.gamepad4j.IButton;
 import org.gamepad4j.IController;
 import org.gamepad4j.IControllerListener;
 import org.gamepad4j.StickID;
+import org.gamepad4j.util.Log;
 
 /**
  * Shows the test program window.
@@ -41,6 +42,11 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 	private static int numberOfPads = 0;
 	
 	public GamepadTestwindow() {
+		
+		// Initial gamepad detection
+		Log.initialize(Log.LogLevel.DEBUG);
+		Controllers.initialize();
+		
 		setTitle("Gamepad4J Test Program");
 	    setSize(400,500);                            // Fenstergröße einstellen  
 	    addWindowListener(new TestWindowListener()); // EventListener für das Fenster hinzufügen
@@ -61,7 +67,7 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 				id = key.substring(key.indexOf("_") + 3);
 				int productID = Integer.parseInt(id, 16);
 				long deviceTypeIdentifier = (vendorID << 16) + productID;
-				System.out.println(">> load image: " + imageFilename);
+				Log.logger.debug(">> load image: " + imageFilename);
 			    InputStream input = GamepadTestwindow.class.getResourceAsStream(imageFilename);
 			    ImageInputStream imageIn = ImageIO.createImageInputStream(input);
 			    BufferedImage image = ImageIO.read(imageIn);
@@ -81,8 +87,6 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 			System.exit(-1);
 		}
 		
-		// Initial gamepad detection
-		Controllers.initialize();
 		Controllers.instance().addListener(this);
 		
 		// Build window content
