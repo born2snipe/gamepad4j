@@ -2,7 +2,7 @@
  * @Copyright: Marcel Schoen, Switzerland, 2013, All Rights Reserved.
  */
 
-package org.gamepad4j.test;
+package org.gamepad4j.desktop.tool;
 
 
 /**
@@ -11,10 +11,10 @@ package org.gamepad4j.test;
  * @author Marcel Schoen
  * @version $Revision: $
  */
-public class GamepadTest {
+public class MappingTool {
 	
 	public static void main(String[] args) {
-		GamepadTest gamepadTest = new GamepadTest();
+		MappingTool gamepadTest = new MappingTool();
 		gamepadTest.runTest();
 	}
 
