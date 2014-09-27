@@ -2,7 +2,7 @@
  * @Copyright: Marcel Schoen, Switzerland, 2014, All Rights Reserved.
  */
 
-package org.gamepad4j.test;
+package org.gamepad4j.desktop.tool;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
