@@ -15,10 +15,10 @@ subprojects {
   version = theVersion
   sourceCompatibility = theSourceCompatibility
 
-configurations {
-    provided
-    compile.extendsFrom provided
-}
+  configurations {
+      provided
+      compile.extendsFrom provided
+  }
 
 }
 

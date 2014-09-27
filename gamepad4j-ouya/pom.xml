@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<artifactId>gamepad4j-root</artifactId>
+		<groupId>org.gamepad4j</groupId>
+		<version>0.2-SNAPSHOT</version>
+	</parent>
+
+    <!-- 
+
+	======================================================================================================
+	NOTE: Set the path of the OUYA SDK in your "settings.xml" in a property "ouya.sdk.path", e.g.:
+	
+	<properties>
+		<ouya.sdk.path>/stuff/java/OUYA-ODK</ouya.sdk.path>
+	</properties>
+	======================================================================================================
+    
+     -->
+	
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>gamepad4j-ouya</artifactId>
+	<name>Gamepad4j OUYA API</name>
+	<packaging>jar</packaging>
+	<description>
+	    Wrapper implementation for proprietary
+		OUYA gamepad API
+	</description>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+	    <dependency>
+	        <groupId>${project.groupId}</groupId>
+	        <version>${project.version}</version>
+	        <artifactId>gamepad4j-api</artifactId>
+	    </dependency>
+		<dependency>
+			<groupId>OUYA</groupId>
+			<artifactId>ODK</artifactId>
+			<version>1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${ouya.sdk.path}/libs/ouya-sdk.jar</systemPath>
+		</dependency>
+	</dependencies>
+	
+</project>
