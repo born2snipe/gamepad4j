@@ -1,7 +1,9 @@
 Gamepad4J
 =========
 
-A simple, elegant and powerful API for using gamepads like the Xbox 360 or DualShock 3 pad in Java-based games. Release 1.0 planned before end of 2014 (releases on SourceForge).
+A simple, elegant and powerful API for using gamepads like the Xbox 360 or DualShock 3 pad in Java-based games. 
+
+*Release 1.0 planned for Nov/Dec 2014*
 
  
 Features
@@ -144,5 +146,5 @@ For the desktop support, this API uses native libraries, wrapped with JNI. In or
  
 You will have to adapt some environment variables in the corresponding build scripts, according to your environment, before you can compile the code.
 
-Once compiled, the native libraries have been copies into the resources folder. Just rebuild the Jar file, and bob's your uncle.
+Once compiled, the native libraries have been copied into the resources folder. Just rebuild the Jar file, and bob's your uncle.
  
