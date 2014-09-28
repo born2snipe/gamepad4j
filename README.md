@@ -80,6 +80,13 @@ Future Controller Support
 It is not (yet) designed to deal specifically with joysticks / flightsticks, steering wheels etc. However, since today probably 80% of game developers really just want to support a gamepad for their game, this is what this API is focusing on. Still, all the analog axes and digital buttons of a controller can be queried, so the API can be used to handle any kind of controller, it just provides no mappings or convenience methods to do so. In the future, specific support for joysticks will probably be added (and maybe for steering wheels, if possible).
 
 
+Known Issues
+------------
+
+ * On desktop systems, the mappings may not always be correct, depending on what driver is being used.
+ * The Xbox 360 pad analog triggers are not properly supported on Windows, due to the Microsoft driver putting them both on the same analog axis (one using the positive, the other using the negative value range; press both, and they negate each other). Ironically, there seems to be no such issue on Linux and MacOS.
+ 
+
 Links / Web Resources
 ---------------------
 
