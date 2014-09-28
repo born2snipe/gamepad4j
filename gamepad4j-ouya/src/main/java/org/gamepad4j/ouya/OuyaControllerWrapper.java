@@ -4,11 +4,16 @@
 
 package org.gamepad4j.ouya;
 
+import org.gamepad4j.AxisID;
 import org.gamepad4j.ButtonID;
 import org.gamepad4j.DpadDirection;
+import org.gamepad4j.IAxis;
 import org.gamepad4j.IStick;
+import org.gamepad4j.ITrigger;
 import org.gamepad4j.StickID;
 import org.gamepad4j.base.AbstractBaseController;
+import org.gamepad4j.base.BaseAxis;
+import org.gamepad4j.base.BaseTrigger;
 
 import tv.ouya.console.api.OuyaController;
 
@@ -24,7 +29,10 @@ public class OuyaControllerWrapper extends AbstractBaseController {
 	private OuyaController wrappedController = null;
 	
 	/** Reference to analog sticks. */
-	private IStick[] sticks = new IStick[2];
+	private OuyaControllerStick[] sticks = new OuyaControllerStick[2];
+	
+	/** Reference to triggers. */
+	private ITrigger[] triggers = new ITrigger[2];
 	
 	/** Constants for accessing sticks array. */
 	private final static int LEFT_STICK = 0;
@@ -58,23 +66,35 @@ public class OuyaControllerWrapper extends AbstractBaseController {
 		this.sticks[LEFT_STICK] = new OuyaControllerStick(StickID.LEFT, wrapped);
 		this.sticks[RIGHT_STICK] = new OuyaControllerStick(StickID.RIGHT, wrapped);
 		
-		addButton(new OuyaControllerButton(this, ButtonID.ACCEPT, "O", "jplay.ouya.button.O", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.BACK, "A", "jplay.ouya.button.A", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.CANCEL, "A", "jplay.ouya.button.A", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.FACE_DOWN, "O", "jplay.ouya.button.O", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.FACE_RIGHT, "A", "jplay.ouya.button.A", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.FACE_LEFT, "U", "jplay.ouya.button.U", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.FACE_UP, "Y", "jplay.ouya.button.Y", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.HOME, "OUYA", "jplay.ouya.button.OUYA", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.MENU, "OUYA", "jplay.ouya.button.OUYA", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.PAUSE, "OUYA", "jplay.ouya.button.OUYA", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.START, "O", "jplay.ouya.button.O", this.wrappedController));
-/*		
-		addButton(new OuyaControllerButton(this, ButtonID.TRIGGER_LEFT_UP, "Left upper trigger", "jplay.ouya.button.leftUpperTrigger", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.TRIGGER_LEFT_DOWN, "Left lower trigger", "jplay.ouya.button.leftLowerTrigger", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.TRIGGER_RIGHT_UP, "Right upper trigger", "jplay.ouya.button.rightUpperTrigger", this.wrappedController));
-		addButton(new OuyaControllerButton(this, ButtonID.TRIGGER_RIGHT_DOWN, "Right lower trigger", "jplay.ouya.button.rightLowerTrigger", this.wrappedController));
-		*/
+		addButton(new OuyaControllerButton(this, ButtonID.ACCEPT, "O", "ouya.controller.facebutton.accept", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.BACK, "A", "ouya.controller.facebutton.back", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.CANCEL, "A", "ouya.controller.facebutton.cancel", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.FACE_DOWN, "O", "ouya.controller.facebutton.down", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.FACE_RIGHT, "A", "ouya.controller.facebutton.right", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.FACE_LEFT, "U", "ouya.controller.facebutton.left", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.FACE_UP, "Y", "ouya.controller.facebutton.up", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.HOME, "OUYA", "ouya.controller.facebutton.home", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.MENU, "OUYA", "ouya.controller.facebutton.menu", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.PAUSE, "OUYA", "ouya.controller.facebutton.pause", this.wrappedController));
+		addButton(new OuyaControllerButton(this, ButtonID.START, "O", "ouya.controller.facebutton.start", this.wrappedController));
+		
+		IAxis leftTriggerAxis = new BaseAxis(AxisID.TRIGGER, OuyaController.AXIS_L2);
+		this.triggers[0] = new BaseTrigger(this, OuyaController.AXIS_L2, leftTriggerAxis, "Left Trigger", "ouya.controller.trigger.left");
+		
+		IAxis rightTriggerAxis = new BaseAxis(AxisID.TRIGGER, OuyaController.AXIS_R2);
+		this.triggers[1] = new BaseTrigger(this, OuyaController.AXIS_R2, rightTriggerAxis, "Right Trigger", "ouya.controller.trigger.right");
+	}
+	
+	/**
+	 * Updates all the values in all axes and buttons.
+	 * This is required for listeners, not for polling access.
+	 */
+	public void updateValues() {
+		this.sticks[LEFT_STICK].updateValues();
+		this.sticks[RIGHT_STICK].updateValues();
+		
+		// TODO - Update triggers and buttons
+		
 	}
 	
 	/* (non-Javadoc)

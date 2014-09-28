@@ -5,9 +5,8 @@
 package org.gamepad4j.ouya;
 
 import org.gamepad4j.AxisID;
-import org.gamepad4j.IAxis;
 import org.gamepad4j.IStick;
-import org.gamepad4j.StickID;
+import org.gamepad4j.base.BaseAxis;
 
 import tv.ouya.console.api.OuyaController;
 
@@ -17,19 +16,13 @@ import tv.ouya.console.api.OuyaController;
  * @author Marcel Schoen
  * @version $Revision: $
  */
-public class OuyaAxis implements IAxis {
-
-	/** Stores the deviceID of the axis. */
-	private AxisID id = null;
-
-	/** Reference to the stick which this axis belongs to. */
-	private IStick stick = null;
+public class OuyaAxis extends BaseAxis {
 	
 	/** Reference to the OUYA controller. */
 	private OuyaController controller = null;
 	
 	/** Stores the OUYA axis deviceID. */
-	private int ouyaAxisId = -1;
+	private int ouyaAxisID = -1;
 	
 	/**
 	 * Creates a wrapper for an analog stick axis.
@@ -38,44 +31,18 @@ public class OuyaAxis implements IAxis {
 	 * @param stick The stick to which the axis belongs.
 	 * @param controller The wrapped controller.
 	 */
-	public OuyaAxis(AxisID id, IStick stick, OuyaController controller) {
-		this.id = id;
-		this.stick = stick;
+	public OuyaAxis(AxisID ID, int ouyaAxisID, IStick stick, OuyaController controller) {
+		super(ID, ouyaAxisID);
+		this.ouyaAxisID = ouyaAxisID;
 		this.controller = controller;
-		if(this.stick.getID() == StickID.LEFT) {
-			if(id == AxisID.X) {
-				this.ouyaAxisId = OuyaController.AXIS_LS_X;
-			} else {
-				this.ouyaAxisId = OuyaController.AXIS_LS_Y;
-			}
-		} else if(this.stick.getID() == StickID.RIGHT) {
-			if(id == AxisID.X) {
-				this.ouyaAxisId = OuyaController.AXIS_RS_X;
-			} else {
-				this.ouyaAxisId = OuyaController.AXIS_RS_Y;
-			}
-		} else {
-			throw new IllegalArgumentException("Stick not yet supported: " + stick.getID().name());
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.gamepad4j.util.IAxis#getID()
-	 */
-	@Override
-	public AxisID getID() {
-		return this.id;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.gamepad4j.util.IAxis#getValue()
+	/**
+	 * Updates the value of this axis.
 	 */
-	@Override
-	public float getValue() {
-		float value = this.controller.getAxisValue(this.ouyaAxisId);
+	public void updateValue() {
+		float value = this.controller.getAxisValue(this.ouyaAxisID);
         value = Math.min(value, 1.0f);
-//		System.out.println("Axis " + this.id.name() + ": " + value);
-		return value;
+        super.setValue(value);
 	}
-
 }

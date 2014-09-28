@@ -169,11 +169,6 @@ public class DesktopController extends AbstractBaseController {
 				processDpadAxis(mapping, axisNo);
 			}
 		}
-		
-		// TODO:
-		// Windows-specific: Triggers can use non-existent axis, so
-		// check for them in the mapping (but currently the JNI library
-		// does not support that)
 	}
 
 	/**
@@ -221,14 +216,14 @@ public class DesktopController extends AbstractBaseController {
 			if(Log.debugEnabled) {
 				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis X");
 			}
-			stick.setAxis(AxisID.X, axisNo);
-			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.X);
+			this.axes[axisNo] = new BaseAxis(AxisID.X, axisNo);
+			stick.setAxis(this.axes[axisNo]);
 		} else {
 			if(Log.debugEnabled) {
 				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis Y");
 			}
-			stick.setAxis(AxisID.Y, axisNo);
-			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.Y);
+			this.axes[axisNo] = new BaseAxis(AxisID.Y, axisNo);
+			stick.setAxis(this.axes[axisNo]);
 		}
 		this.axes[axisNo].setDeadZone(this.defaultDeadZone);
 	}
@@ -246,6 +241,10 @@ public class DesktopController extends AbstractBaseController {
 				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to trigger " + mappedID);
 			}
 			this.axes[axisNo] = new BaseAxis(AxisID.TRIGGER, axisNo);
+			
+			
+			// TODO: SET LABELS AND RESOURCE KEYS
+			
 			
 			this.triggers[triggerNo] = new BaseTrigger(this, triggerNo, this.axes[axisNo], "", "");
 			this.triggers[triggerNo].setID(mappedID);

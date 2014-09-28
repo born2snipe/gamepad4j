@@ -28,7 +28,7 @@ public class OuyaControllerProvider implements IControllerProvider {
 	private ControllerListenerAdapter listeners = new ControllerListenerAdapter();
 
 	/** Map of all connected OUYA controllers. */
-	private Map<OuyaController, IController> connected = new HashMap<OuyaController, IController>();
+	private Map<OuyaController, OuyaControllerWrapper> connected = new HashMap<OuyaController, OuyaControllerWrapper>();
 	
 	/* (non-Javadoc)
 	 * @see org.gamepad4j.util.IControllerProvider#initialize()
@@ -67,6 +67,14 @@ public class OuyaControllerProvider implements IControllerProvider {
 		if(update) {
 			updateControllers();
 		}
+		// Now update the button and axes states
+		for(int ct = 0; ct < MAX_CONTROLLERS; ct++) {
+			if(OuyaController.getControllerByPlayer(ct) != null) {
+				OuyaController ouyaController = OuyaController.getControllerByPlayer(ct);
+				OuyaControllerWrapper wrapper = this.connected.get(ouyaController);
+				wrapper.updateValues();
+			}
+		}
 	}
 
 	/**
@@ -79,7 +87,7 @@ public class OuyaControllerProvider implements IControllerProvider {
 		for(int ct = 0; ct < MAX_CONTROLLERS; ct++) {
 			if(OuyaController.getControllerByPlayer(ct) != null) {
 				OuyaController ouyaController = OuyaController.getControllerByPlayer(ct);
-				IController controller = new OuyaControllerWrapper(ouyaController);
+				OuyaControllerWrapper controller = new OuyaControllerWrapper(ouyaController);
 				this.connected.put(ouyaController, controller);
 				for(IControllerListener listener : this.listeners.getListeners()) {
 					listener.connected(controller);
