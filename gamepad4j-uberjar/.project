@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>gamepad4j-uberjar</name>
-	<comment></comment>
-	<projects>
-	</projects>
-	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-	</buildSpec>
-	<natures>
-		<nature>org.eclipse.jdt.core.javanature</nature>
-	</natures>
+  <name>gamepad4j-uberjar</name>
+  <comment>Jar which contains the core Gamepad4j API as well as all
+	    the wrappers and implementations for the various platforms,
+	    including native libraries. This is the jar that you need
+	    to use as a runtime dependency in your game (no matter on 
+	    which platform). NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>gamepad4j-api</project>
+    <project>gamepad4j-desktop</project>
+    <project>gamepad4j-ouya</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
 </projectDescription>

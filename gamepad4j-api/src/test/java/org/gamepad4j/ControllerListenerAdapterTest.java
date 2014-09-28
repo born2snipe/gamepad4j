@@ -4,6 +4,8 @@
 
 package org.gamepad4j;
 
+import org.junit.Test;
+
 /**
  * Tests the controller listener adapter.
  *
@@ -12,5 +14,8 @@ package org.gamepad4j;
  */
 public class ControllerListenerAdapterTest {
 
-	
+	@Test
+	public void testAdapter() throws Exception {
+		
+	}
 }

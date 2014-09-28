@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="var" path="OUYA_LIBS/commons-lang-2.6.jar"/>
-	<classpathentry kind="var" path="OUYA_LIBS/guava-r09.jar"/>
-	<classpathentry kind="var" path="OUYA_LIBS/ouya-sdk.jar"/>
-	<classpathentry kind="var" path="LIBGDX_LIBS/gdx.jar"/>
-	<classpathentry kind="var" path="LIBGDX_LIBS/gdx-backend-android.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/gamepad4j-api"/>
-	<classpathentry kind="output" path="bin"/>
+  <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="src" path="/gamepad4j-api"/>
+  <classpathentry kind="lib" path="/stuff/java/OUYA-ODK/libs/ouya-sdk.jar"/>
 </classpath>
