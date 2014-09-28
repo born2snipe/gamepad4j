@@ -189,13 +189,13 @@ public class DesktopController extends AbstractBaseController {
 			if(Log.debugEnabled) {
 				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis X");
 			}
-			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_X);
+			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_X, axisNo);
 			this.dpadAxisMap.put(AxisID.D_PAD_X, this.axes[axisNo]);
 		} else {
 			if(Log.debugEnabled) {
 				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to dpad axis Y");
 			}
-			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_Y);
+			this.axes[axisNo] = new BaseAxis(AxisID.D_PAD_Y, axisNo);
 			this.dpadAxisMap.put(AxisID.D_PAD_Y, this.axes[axisNo]);
 		}
 	}
@@ -221,11 +221,13 @@ public class DesktopController extends AbstractBaseController {
 			if(Log.debugEnabled) {
 				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis X");
 			}
+			stick.setAxis(AxisID.X, axisNo);
 			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.X);
 		} else {
 			if(Log.debugEnabled) {
 				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to stick " + stickID + " axis Y");
 			}
+			stick.setAxis(AxisID.Y, axisNo);
 			this.axes[axisNo] = (BaseAxis)stick.getAxis(AxisID.Y);
 		}
 		this.axes[axisNo].setDeadZone(this.defaultDeadZone);
@@ -243,7 +245,7 @@ public class DesktopController extends AbstractBaseController {
 			if(Log.debugEnabled) {
 				Log.logger.debug("Map axis no. " + axisNo + " from mapping " + mapping + " to trigger " + mappedID);
 			}
-			this.axes[axisNo] = new BaseAxis(AxisID.TRIGGER);
+			this.axes[axisNo] = new BaseAxis(AxisID.TRIGGER, axisNo);
 			
 			this.triggers[triggerNo] = new BaseTrigger(this, triggerNo, this.axes[axisNo], "", "");
 			this.triggers[triggerNo].setID(mappedID);

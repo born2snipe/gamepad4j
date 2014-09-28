@@ -27,10 +27,10 @@ public class BaseStick implements IStick {
 	protected StickPosition position = new StickPosition();
 	
 	/** Holds direct reference to the X-axis. */
-	protected BaseAxis xAxis = new BaseAxis(AxisID.X);
+	protected BaseAxis xAxis = null;
 	
 	/** Holds direct reference to the Y-axis. */
-	protected BaseAxis yAxis = new BaseAxis(AxisID.Y);
+	protected BaseAxis yAxis = null;
 	
 	/** Stores the two axes in an array. */
 	private IAxis[] axes = new IAxis[2];
@@ -44,6 +44,29 @@ public class BaseStick implements IStick {
 		this.ID = ID;
 		this.axes[0] = this.xAxis;
 		this.axes[1] = this.yAxis;
+	}
+
+	/**
+	 * Sets the ID and number of an axis for this stick.
+	 * 
+	 * @param ID The ID of the axis.
+	 * @param axisNumber The number of the axis.
+	 */
+	public void setAxis(AxisID ID, int axisNumber) {
+		if(ID == AxisID.X) {
+			if(this.xAxis != null) {
+				throw new IllegalStateException("* AXIS " + axisNumber + " ALREADY SET! *");
+			}
+			this.xAxis = new BaseAxis(AxisID.X, axisNumber);
+			this.axes[0] = this.xAxis;
+		}
+		if(ID == AxisID.Y) {
+			if(this.yAxis != null) {
+				throw new IllegalStateException("* AXIS " + axisNumber + " ALREADY SET! *");
+			}
+			this.yAxis = new BaseAxis(AxisID.Y, axisNumber);
+			this.axes[1] = this.yAxis;
+		}
 	}
 	
 	/* (non-Javadoc)

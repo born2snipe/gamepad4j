@@ -4,6 +4,7 @@
 
 package org.gamepad4j.base;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,9 @@ public class BaseAxis implements IAxis {
 	/** Stores the float value of this axis. */
 	private float value = 0f;
 	
+	/** Stores the number of the axis. */
+	private int number = -1;
+	
 	/** Stores the previous float value of this axis. */
 	private float previousValue = 0f;
 
@@ -39,10 +43,19 @@ public class BaseAxis implements IAxis {
 	 * Creates a new base axis instance.
 	 * 
 	 * @param ID The ID of the axis (important only for multi-axes components like sticks).
-	 * @param type The axis type (stick, trigger...).
+	 * @param The number of the axis.
 	 */
-	public BaseAxis(AxisID ID) {
+	public BaseAxis(AxisID ID, int number) {
 		this.ID = ID;
+		this.number = number;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.gamepad4j.IAxis#getNumber()
+	 */
+	@Override
+	public int getNumber() {
+		return this.number;
 	}
 
 	/* (non-Javadoc)
@@ -93,6 +106,9 @@ public class BaseAxis implements IAxis {
 	 * @param value The new float value.
 	 */
 	public void setValue(float value) {
+		if(value < -1.0f || value > 1.0f) {
+			throw new RuntimeException("ILLEGAL AXIS VALUE: " + value);
+		}
 		this.previousValue = this.value;
 		this.value = value;
 		if(this.value != this.previousValue && this.listeners != null) {

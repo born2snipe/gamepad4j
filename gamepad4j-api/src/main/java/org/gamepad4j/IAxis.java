@@ -21,6 +21,13 @@ public interface IAxis {
 	AxisID getID();
 	
 	/**
+	 * Returns the number of the axis.
+	 * 
+	 * @return The axis number.
+	 */
+	int getNumber();
+	
+	/**
 	 * Returns the value of this axis (usually a value
 	 * between -1.0 and 1.0).
 	 * 

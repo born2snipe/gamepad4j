@@ -7,6 +7,7 @@ package org.gamepad4j.desktop.tool;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -29,6 +30,8 @@ public class ColorBoxPanel extends JPanel implements IAxisListener {
 	
 	public static Dimension SIZE = new Dimension(50,10);
 
+	private DecimalFormat df = new DecimalFormat("#.####");
+	
 	public ColorBoxPanel(IAxis axis) {
 		this.axis = axis;
 		this.axis.addAxisListener(this);

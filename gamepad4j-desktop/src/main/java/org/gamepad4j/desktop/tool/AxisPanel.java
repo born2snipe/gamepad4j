@@ -4,11 +4,11 @@
 
 package org.gamepad4j.desktop.tool;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.gamepad4j.IAxis;
@@ -29,13 +29,11 @@ public class AxisPanel extends JPanel {
 	    
 	    JPanel noPanel = new JPanel();
 	    noPanel.setPreferredSize(new Dimension(50, 20));
+	    JLabel number = new JLabel(String.valueOf(axis.getNumber()));
+	    noPanel.add(number);
 	    add(noPanel);
 	    
 	    colorPanel = new ColorBoxPanel(axis);
 	    add(colorPanel);
-	}
-	
-	public void update() {
-		
 	}
 }
