@@ -117,7 +117,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<!-- needs to run in a current jdk/jre 1.6 -->
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -127,6 +126,11 @@
 
 		<pluginManagement>
 			<plugins>
+			    <plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>properties-maven-plugin</artifactId>
+					<version>1.0-alpha-1</version>
+			    </plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
@@ -164,5 +168,16 @@
 				</plugin>				
 			</plugins>
 		</pluginManagement>
+		
 	</build>
+		
+	<dependencyManagement>
+	    <dependencies>
+		    <dependency>
+		        <artifactId>junit</artifactId>
+		        <groupId>junit</groupId>
+		        <version>4.10</version>
+		    </dependency>
+	    </dependencies>
+	</dependencyManagement>
 </project>
