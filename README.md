@@ -84,6 +84,7 @@ Links / Web Resources
 ---------------------
 
  * Project Site: http://www.gamepad4j.org
+ * Github Site: https://github.com/marcelschoen/gamepad4j
  * Javadoc: http://www.gamepad4j.org/javadoc
  * Downloads: https://sourceforge.net/projects/gamepad4j/files/
  * Native Gamepad API: http://forums.tigsource.com/index.php?topic=10675
@@ -95,6 +96,7 @@ Build Information
 Prerequisites
 -------------
 
+ * GIT (sourcecode is on Github)
  * Java 1.6
  * Maven 3.2 or Gradle 1.2
  * OUYA SDK (ODK) installed, environment variable "ODK" set for Gradle, or Maven property "ouya.sdk.path" set accordingly 
