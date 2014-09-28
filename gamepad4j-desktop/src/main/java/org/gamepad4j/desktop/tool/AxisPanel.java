@@ -4,6 +4,7 @@
 
 package org.gamepad4j.desktop.tool;
 
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -20,21 +21,17 @@ import org.gamepad4j.IAxis;
  */
 public class AxisPanel extends JPanel {
 
-	private IAxis axis = null;
-	private JPanel colorPanel = new JPanel();
+	private ColorBoxPanel colorPanel = null;
 	
 	public AxisPanel(IAxis axis) {
-		this.axis = axis;
 	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	    setBorder(BorderFactory.createLoweredBevelBorder());
-	    setSize(new Dimension(50,30));
 	    
 	    JPanel noPanel = new JPanel();
-	    noPanel.setSize(new Dimension(50, 18));
+	    noPanel.setPreferredSize(new Dimension(50, 20));
 	    add(noPanel);
 	    
-	    colorPanel = new JPanel();
-	    noPanel.setSize(new Dimension(50, 12));
+	    colorPanel = new ColorBoxPanel(axis);
 	    add(colorPanel);
 	}
 	

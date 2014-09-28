@@ -29,31 +29,30 @@ import org.gamepad4j.StickID;
 import org.gamepad4j.util.Log;
 
 /**
- * Shows the test program window.
+ * Shows the mapping tool window.
  *
  * @author Marcel Schoen
  * @version $Revision: $
  */
-public class GamepadTestwindow extends JFrame implements IControllerListener {
+public class MappingToolWindow extends JFrame implements IControllerListener {
 
 	/** Stores ImageIcon instances for various pads. */
 	public static Map<Long, ImageIcon> padImageMap = new HashMap<Long, ImageIcon>();
 
 	private static int numberOfPads = 0;
 	
-	public GamepadTestwindow() {
+	public MappingToolWindow() {
 		
 		// Initial gamepad detection
 		Log.initialize(Log.LogLevel.DEBUG);
 		Controllers.initialize();
 		
 		setTitle("Gamepad4J Test Program");
-	    setSize(400,500);                            // Fenstergröße einstellen  
-	    addWindowListener(new TestWindowListener()); // EventListener für das Fenster hinzufügen
-	                                                 // (notwendig, damit das Fenster geschlossen werden kann)
+	    setSize(400,500);  
+	    addWindowListener(new TestWindowListener());
 	    getContentPane().setLayout(new FlowLayout());
 		try {
-			InputStream in = GamepadTestwindow.class.getResourceAsStream("/image-filenames.properties");
+			InputStream in = MappingToolWindow.class.getResourceAsStream("/image-filenames.properties");
 			Properties filenameProps = new Properties();
 			filenameProps.load(in);
 			
@@ -68,7 +67,7 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 				int productID = Integer.parseInt(id, 16);
 				long deviceTypeIdentifier = (vendorID << 16) + productID;
 				Log.logger.debug(">> load image: " + imageFilename);
-			    InputStream input = GamepadTestwindow.class.getResourceAsStream(imageFilename);
+			    InputStream input = MappingToolWindow.class.getResourceAsStream(imageFilename);
 			    ImageInputStream imageIn = ImageIO.createImageInputStream(input);
 			    BufferedImage image = ImageIO.read(imageIn);
 			    ImageIcon padImage = new ImageIcon(image);
@@ -76,7 +75,7 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 			}
 
 			// Store default image
-		    InputStream input = GamepadTestwindow.class.getResourceAsStream("/controller_xbox_360.png");
+		    InputStream input = MappingToolWindow.class.getResourceAsStream("/controller_xbox_360.png");
 		    ImageInputStream imageIn = ImageIO.createImageInputStream(input);
 		    BufferedImage image = ImageIO.read(imageIn);
 		    ImageIcon padImage = new ImageIcon(image);
@@ -111,6 +110,7 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 	 */
 	@Override
 	public void connected(IController controller) {
+		System.out.println(">> Gamepad connected.");
 		updateWindow();
 	}
 
@@ -119,6 +119,7 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 	 */
 	@Override
 	public void disConnected(IController controller) {
+		System.out.println(">> Gamepad disconnected.");
 		updateWindow();
 	}
 
@@ -128,8 +129,7 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 	@Override
 	public void buttonDown(IController controller, IButton button,
 			ButtonID buttonID) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(">> button down");
 	}
 
 	/* (non-Javadoc)
@@ -138,8 +138,7 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 	@Override
 	public void buttonUp(IController controller, IButton button,
 			ButtonID buttonID) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(">> button up");
 	}
 
 	/* (non-Javadoc)
@@ -147,15 +146,15 @@ public class GamepadTestwindow extends JFrame implements IControllerListener {
 	 */
 	@Override
 	public void moveStick(IController controller, StickID stick) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(">> move stick");
 	}
 
 
 	class TestWindowListener extends WindowAdapter {
 	    public void windowClosing(WindowEvent e) {
+			GamepadCheck.running = false;
 			Controllers.shutdown();
-			e.getWindow().dispose();                   // Fenster "killen"
+			e.getWindow().dispose();
 	    }           
 	}
 }

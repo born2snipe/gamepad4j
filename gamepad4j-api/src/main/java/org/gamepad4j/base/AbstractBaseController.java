@@ -350,6 +350,9 @@ public abstract class AbstractBaseController implements IController {
 	 */
 	@Override
 	public IAxis[] getAxes() {
+		if(this.axes == null) {
+			this.axes = new BaseAxis[0];
+		}
 		return this.axes;
 	}
 }

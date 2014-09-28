@@ -103,7 +103,7 @@ public class DesktopControllerProvider implements IControllerProvider {
 		
 		
 		float value = jniWrapper.natGetControllerAxisState(0, 8);
-		System.err.println(">> Axis 8: " + value);
+//		System.err.println(">> Axis 8: " + value);
 		
 		
 		// 1st check which controllers are (still) connected

@@ -4,8 +4,12 @@
 
 package org.gamepad4j.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.gamepad4j.AxisID;
 import org.gamepad4j.IAxis;
+import org.gamepad4j.IAxisListener;
 
 /**
  * Holder for values of one axis.
@@ -20,10 +24,16 @@ public class BaseAxis implements IAxis {
 	
 	/** Stores the float value of this axis. */
 	private float value = 0f;
+	
+	/** Stores the previous float value of this axis. */
+	private float previousValue = 0f;
 
 	/** Default deadzone range. */
 	private float deadZone = 0.1f;
 	private float deadZoneNegative = -this.deadZone;
+
+	/** List of axis event listeners. */
+	private List<IAxisListener> listeners = null;
 	
 	/**
 	 * Creates a new base axis instance.
@@ -33,6 +43,17 @@ public class BaseAxis implements IAxis {
 	 */
 	public BaseAxis(AxisID ID) {
 		this.ID = ID;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gamepad4j.IAxis#addAxisListener(org.gamepad4j.IAxisListener)
+	 */
+	@Override
+	public void addAxisListener(IAxisListener listener) {
+		if(this.listeners == null) {
+			this.listeners = new ArrayList<IAxisListener>();
+		}
+		this.listeners.add(listener);
 	}
 	
 	/* (non-Javadoc)
@@ -72,6 +93,12 @@ public class BaseAxis implements IAxis {
 	 * @param value The new float value.
 	 */
 	public void setValue(float value) {
+		this.previousValue = this.value;
 		this.value = value;
+		if(this.value != this.previousValue && this.listeners != null) {
+			for(IAxisListener listener : this.listeners) {
+				listener.moved(this.value);
+			}
+		}
 	}
 }

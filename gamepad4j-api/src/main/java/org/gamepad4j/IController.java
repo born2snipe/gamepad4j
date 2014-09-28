@@ -77,7 +77,7 @@ public interface IController {
 	 * of an unknown or non-standard device, this method allows to
 	 * handle all axes manually.
 	 * 
-	 * @return The array with the axes.
+	 * @return The array with the axes. May be empty (0 entries), but not null.
 	 */
 	IAxis[] getAxes();
 	

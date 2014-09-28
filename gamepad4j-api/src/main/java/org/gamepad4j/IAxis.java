@@ -27,4 +27,11 @@ public interface IAxis {
 	 * @return The value of this axis.
 	 */
 	float getValue();
+	
+	/**
+	 * Adds a listener for events of this axis.
+	 * 
+	 * @param listener The axis listener.
+	 */
+	void addAxisListener(IAxisListener listener);
 }
