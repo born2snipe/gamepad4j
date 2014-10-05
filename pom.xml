@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.gamepad4j</groupId>
 	<artifactId>gamepad4j-root</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.3-SNAPSHOT</version>
 	<name>Java Multiplatform Gamepad API</name>
 	<packaging>pom</packaging>
 	<description>API for using gamepads (Xbox 360, PS3 etc.) with Java.</description>
