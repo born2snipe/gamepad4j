@@ -99,6 +99,15 @@ Links / Web Resources
  * Native Gamepad API: http://forums.tigsource.com/index.php?topic=10675
 
 
+Credits
+-------
+ * Java API by Marcel Schoen, Switzerland
+ * Desktop native API by Alex Diener: http://forums.tigsource.com/index.php?topic=10675.msg328738#msg328738
+ * Native API multiplatform build support and testing by Thomas Frauenknecht, Switzerland
+ * Website Design by Jason Long: https://github.com/jasonlong/architect-theme
+ * Jekyll Theme by Pietro Menna: https://github.com/pietromenna/jekyll-architect-theme
+
+
 Build Information
 =================
 
