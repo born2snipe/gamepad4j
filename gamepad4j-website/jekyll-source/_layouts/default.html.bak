@@ -25,7 +25,9 @@
       </div>
     </header>
 
-    <img style="position: absolute; left: 15px; top: 300px;" src="images/gamepad4j_logo.png" />
+<!--
+    <img style="float: left; margin: 40px 50px 0px 0px;" src="images/gamepad4j_logo2.png" />
+-->
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
