@@ -51,25 +51,25 @@ public class StickPosition {
 	public DpadDirection getDirection() {
 		float degree = getDegree();
 		/*
-		 * degree ranges from -180 (top) to -90 (right) to 0 (down) to 90 (left)
+		 * degree ranges from 0 (top) to 90 (right) to 180 (down) to 270 (left)
 		 */
 		if(degree == NO_DEGREE) {
 			return DpadDirection.NONE;
-		} else if(degree < 27.5f && degree > -27.5f) {
+		} else if(degree < 207.5f && degree > 152.5f) {
 			return DpadDirection.DOWN;
-		} else if(degree < 72.5f && degree > 27.5f) {
+		} else if(degree < 252.5f && degree > 207.5f) {
 			return DpadDirection.DOWN_LEFT;
-		} else if(degree < 117.5f && degree > 72.5f) {
+		} else if(degree < 297.5f && degree > 252.5f) {
 			return DpadDirection.LEFT;
-		} else if(degree < 162.5f && degree > 117.5f) {
+		} else if(degree < 342.5f && degree > 297.5f) {
 			return DpadDirection.UP_LEFT;
-		} else if(degree > 162.4f || degree < -162.4f) {
+		} else if(degree > 342.4f || degree < -342.4f) {
 			return DpadDirection.UP;
-		} else if(degree < -27.5f && degree > -72.5f) {
+		} else if(degree < 152.5f && degree > 107.5f) {
 			return DpadDirection.DOWN_RIGHT;
-		} else if(degree < -72.5f && degree > -117.5f) {
+		} else if(degree < 107.5f && degree > 62.5f) {
 			return DpadDirection.RIGHT;
-		} else if(degree < -117.5f && degree > -162.5f) {
+		} else if(degree < 62.5f && degree > 17.5f) {
 			return DpadDirection.UP_RIGHT;
 		}
 		return DpadDirection.NONE;
