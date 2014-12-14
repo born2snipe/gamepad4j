@@ -84,20 +84,22 @@ public class Board extends JPanel implements ActionListener, Runnable {
             Controllers.checkControllers();
             IController[] gamepads = Controllers.getControllers();
             if(gamepads.length > 0) {
-            	boolean moving = true;
+            	boolean moving = false;
             	
                 IController mainController = gamepads[0];
                 DpadDirection dpadDirection = mainController.getDpadDirection();
                 if(dpadDirection == DpadDirection.UP) {
                 	craft.goUp();
+                	moving = true;
                 } else if(dpadDirection == DpadDirection.DOWN) {
                 	craft.goDown();
+                	moving = true;
                 } else if(dpadDirection == DpadDirection.LEFT) {
                 	craft.goLeft();
+                	moving = true;
                 } else if(dpadDirection == DpadDirection.RIGHT) {
                 	craft.goRight();
-                } else if(dpadDirection == DpadDirection.NONE) {
-                	moving = false;
+                	moving = true;
                 }
                 
                 IStick leftStick = mainController.getStick(StickID.LEFT);
@@ -120,8 +122,6 @@ public class Board extends JPanel implements ActionListener, Runnable {
                 } else if(mainDirection == DpadDirection.RIGHT) {
                 	craft.goRight();
                 	moving = true;
-                } else if(mainDirection == DpadDirection.NONE) {
-                	moving = false;
                 }
                 
                 if(!moving) {
