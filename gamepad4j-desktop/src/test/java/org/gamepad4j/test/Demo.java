@@ -2,9 +2,9 @@ package org.gamepad4j.test;
 
 import javax.swing.JFrame;
 
-public class DemoTest extends JFrame {
+public class Demo extends JFrame {
 
-    public DemoTest() {
+    public Demo() {
 
         add(new Board());
 
@@ -18,6 +18,6 @@ public class DemoTest extends JFrame {
     }
 
     public static void main(String[] args) {
-        new DemoTest();
+        new Demo();
     }
 }
