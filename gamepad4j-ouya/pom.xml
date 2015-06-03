@@ -7,18 +7,6 @@
 		<version>0.3-SNAPSHOT</version>
 	</parent>
 
-    <!-- 
-
-	======================================================================================================
-	NOTE: Set the path of the OUYA SDK in your "settings.xml" in a property "ouya.sdk.path", e.g.:
-	
-	<properties>
-		<ouya.sdk.path>/stuff/java/OUYA-ODK</ouya.sdk.path>
-	</properties>
-	======================================================================================================
-    
-     -->
-	
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>gamepad4j-ouya</artifactId>
 	<name>Gamepad4j OUYA API</name>
@@ -27,7 +15,11 @@
 	    Wrapper implementation for proprietary
 		OUYA gamepad API
 	</description>
-	
+
+	<properties>
+		<ouya-sdk.version>2.0.1</ouya-sdk.version>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -64,12 +56,18 @@
 	        <artifactId>gamepad4j-api</artifactId>
 	    </dependency>
 		<dependency>
-			<groupId>OUYA</groupId>
-			<artifactId>ODK</artifactId>
-			<version>1.0.0</version>
-			<scope>system</scope>
-			<systemPath>${ouya.sdk.path}/libs/ouya-sdk.jar</systemPath>
+			<groupId>ouya</groupId>
+			<artifactId>ouya-sdk</artifactId>
+			<version>${ouya-sdk.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-	
+
+	<repositories>
+		<repository>
+			<id>ouya</id>
+			<url>http://maven.ouya.tv</url>
+		</repository>
+	</repositories>
+
 </project>
